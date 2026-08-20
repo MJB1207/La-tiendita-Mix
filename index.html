@@ -144,7 +144,7 @@
       <textarea id="checkNotes" rows="2" placeholder="Notas adicionales (opcional)" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border); background:#FAFAF8; resize:none;"></textarea>
       <div class="shipping-note">
         <i class="fas fa-info-circle text-sm"></i>
-        <p class="text-xs text-drift leading-relaxed">El costo de <strong>mensajería varia según la ubicación</strong> y se confirma por WhatsApp al procesar tu pedido.</p>
+        <p class="text-xs text-drift leading-relaxed">El costo de <strong>mensajería varía según la ubicación</strong> y se confirma por WhatsApp al procesar tu pedido.</p>
       </div>
       <div id="cartTotalSummary" class="text-right pt-1"></div>
       <button type="button" id="sendWhatsapp" class="w-full py-3.5 rounded-xl font-bold text-white text-base flex items-center justify-center gap-2 transition active:scale-95" style="background:#16A34A; box-shadow:0 4px 16px rgba(22,163,74,0.3);"><i class="fab fa-whatsapp text-xl"></i>Enviar Pedido por WhatsApp</button>
@@ -155,6 +155,7 @@
     <div class="text-center mb-6">
       <div class="w-16 h-16 rounded-2xl mx-auto mb-3 flex items-center justify-center btn-accent"><i class="fas fa-lock text-white text-2xl"></i></div>
       <h3 class="font-display text-xl font-bold">Acceso Admin</h3>
+      <p class="text-drift text-xs mt-1">Email y contraseña requeridos</p>
     </div>
     <div class="space-y-4">
       <input id="loginUser" type="email" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border); background:#FAFAF8;" placeholder="Email autorizado">
@@ -185,24 +186,21 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    /* ==================== SUPABASE ==================== */
     const SUPABASE_URL = 'https://hqijdiyidouvofdjafhl.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_5F3Cpg8wwY8kiqqeSJdFIQ_HvKEx6X3';
     let sb;
     try { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) { console.error(e); }
 
-    /* ==================== ESTADO ==================== */
     let storeData = {
-      sections: [], featuredProducts: [],
+      sections: [], featuredProducts: [], adminEmails: [],
       storeName: 'La Tiendita Mix', heroSubtitle: 'De todo un poquito por ti',
       backgroundColor: '#FDFBF7', headerColor: '#1A1A1A', accentColor: '#D94F30',
-      exchangeRate: 300, whatsappNumber: '', adminEmails: []
+      exchangeRate: 300, whatsappNumber: ''
     };
     let isLoggedIn = false, currentAdminPage = 'dashboard', activeSectionTab = -1;
     let adminSelectedSection = 0, cart = [];
     let editingSectionId = null, editingProductId = null, editingProductSectionId = null;
 
-    /* ==================== DATOS ==================== */
     function parseJSON(v) { return v ? (typeof v === 'string' ? JSON.parse(v) : v) : []; }
 
     function sanitizeData() {
@@ -216,8 +214,7 @@
       if (!storeData.headerColor) storeData.headerColor = '#1A1A1A';
       if (!storeData.accentColor) storeData.accentColor = '#D94F30';
       storeData.featuredProducts = storeData.featuredProducts.map(Number);
-      storeData.adminEmails = storeData.adminEmails.map(e => String(e).toLowerCase().trim());
-      // Migrar adminEmail viejo a adminEmails si hace falta
+      storeData.adminEmails = storeData.adminEmails.map(e => String(e).toLowerCase().trim()).filter(e => e);
       if (storeData.adminEmail && !storeData.adminEmails.includes(String(storeData.adminEmail).toLowerCase().trim())) {
         storeData.adminEmails.push(String(storeData.adminEmail).toLowerCase().trim());
       }
@@ -256,14 +253,35 @@
       return data.publicUrl;
     }
 
-    /* ==================== AUTH ==================== */
-    function checkAuth() {
+    /* ==================== AUTH SEGURA ==================== */
+    function updateNavIcon() {
+      const i = document.getElementById('navAdmin').querySelector('i');
+      i.className = isLoggedIn ? 'fas fa-unlock' : 'fas fa-lock';
+      i.style.color = isLoggedIn ? 'var(--accent)' : '';
+    }
+
+    async function checkAuth() {
       if (!sb) return;
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        if (session && session.user) {
+          const email = session.user.email.toLowerCase().trim();
+          const admins = (storeData.adminEmails || []).map(e => e.toLowerCase().trim());
+          isLoggedIn = admins.includes(email);
+        } else {
+          isLoggedIn = false;
+        }
+      } catch(e) { isLoggedIn = false; }
+      updateNavIcon();
       sb.auth.onAuthStateChange((ev, session) => {
-        isLoggedIn = !!session;
-        const i = document.getElementById('navAdmin').querySelector('i');
-        i.className = isLoggedIn ? 'fas fa-unlock' : 'fas fa-lock';
-        i.style.color = isLoggedIn ? 'var(--accent)' : '';
+        if (session && session.user) {
+          const email = session.user.email.toLowerCase().trim();
+          const admins = (storeData.adminEmails || []).map(e => e.toLowerCase().trim());
+          isLoggedIn = admins.includes(email);
+        } else {
+          isLoggedIn = false;
+        }
+        updateNavIcon();
       });
     }
 
@@ -271,27 +289,80 @@
       if (!sb) return showToast('Error de conexión', 'error');
       const email = document.getElementById('loginUser').value.trim();
       const password = document.getElementById('loginPass').value;
+      const errEl = document.getElementById('loginError');
+      errEl.classList.add('hidden');
+
       const admins = (storeData.adminEmails || []).map(e => e.toLowerCase().trim());
+
       if (!admins.length) {
-        document.getElementById('loginError').textContent = 'No hay emails admin configurados. Pídele al administrador que los agregue en Config.';
-        document.getElementById('loginError').classList.remove('hidden');
+        errEl.textContent = 'No hay emails admin configurados. Pídele al administrador que los agregue.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        errEl.textContent = 'Escribe un email válido.';
+        errEl.classList.remove('hidden');
         return;
       }
       if (!admins.includes(email.toLowerCase().trim())) {
-        document.getElementById('loginError').textContent = 'Acceso no autorizado. Este email no está en la lista de administradores.';
-        document.getElementById('loginError').classList.remove('hidden');
+        errEl.textContent = 'Acceso no autorizado. Este email no está en la lista de administradores.';
+        errEl.classList.remove('hidden');
         return;
       }
+      if (!password) {
+        errEl.textContent = 'Escribe la contraseña.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
       try {
-        await sb.auth.signInWithPassword({ email, password });
-        closeAllModals(); openAdminPanel('dashboard');
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        if (!data.session || !data.user) throw new Error('No se pudo crear sesión');
+        if (data.user.email.toLowerCase().trim() !== email.toLowerCase().trim()) {
+          await sb.auth.signOut();
+          throw new Error('Email no coincide');
+        }
+        isLoggedIn = true;
+        updateNavIcon();
+        closeAllModals();
+        openAdminPanel('dashboard');
       } catch (e) {
-        document.getElementById('loginError').textContent = 'Contraseña incorrecta.';
-        document.getElementById('loginError').classList.remove('hidden');
+        try { await sb.auth.signOut(); } catch(x) {}
+        isLoggedIn = false;
+        updateNavIcon();
+        errEl.textContent = 'Contraseña incorrecta.';
+        errEl.classList.remove('hidden');
       }
     }
 
-    async function handleLogout() { if (sb) await sb.auth.signOut(); closeAllModals(); showToast('Sesión cerrada'); }
+    async function handleLogout() {
+      try { if (sb) await sb.auth.signOut(); } catch(e) {}
+      isLoggedIn = false;
+      updateNavIcon();
+      closeAllModals();
+      showToast('Sesión cerrada');
+    }
+
+    async function handleAdminClick() {
+      if (isLoggedIn && sb) {
+        try {
+          const { data: { session } } = await sb.auth.getSession();
+          if (session && session.user) {
+            const email = session.user.email.toLowerCase().trim();
+            const admins = (storeData.adminEmails || []).map(e => e.toLowerCase().trim());
+            if (admins.includes(email)) {
+              openAdminPanel('dashboard');
+              return;
+            }
+            await sb.auth.signOut();
+          }
+        } catch(e) {}
+        isLoggedIn = false;
+        updateNavIcon();
+      }
+      openModal('loginModal');
+    }
 
     /* ==================== ASPECTO ==================== */
     function applyAppearance() {
@@ -303,7 +374,6 @@
       document.getElementById('heroSubtitle').textContent = storeData.heroSubtitle || 'De todo un poquito por ti';
     }
 
-    /* ==================== UTILS ==================== */
     function getUSD(cup) { return Number(cup) / (Number(storeData.exchangeRate) || 300); }
     function fmtPrice(cup) { return `${getUSD(cup).toFixed(2)} USD <span class="text-[10px] text-drift font-normal">| ${Math.round(Number(cup)).toLocaleString()} CUP</span>`; }
     function getAllProducts() { return storeData.sections.flatMap(s => (s.products || []).map(p => ({ ...p, section_id: s.id, section_name: s.name }))); }
@@ -312,13 +382,12 @@
     window.openLightbox = function(src) { document.getElementById('lightboxImg').src = src; document.getElementById('lightbox').classList.add('active'); };
     window.closeLightbox = function() { document.getElementById('lightbox').classList.remove('active'); };
 
-    /* ==================== NAVEGACIÓN ==================== */
     function switchScreen(screen) {
       document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
       if (screen === 'catalog') { document.getElementById('navCatalog').classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
       else if (screen === 'cart') { document.getElementById('navCart').classList.add('active'); openModal('cartModal'); renderCartModal(); }
     }
-    function handleAdminClick() { isLoggedIn ? openAdminPanel('dashboard') : openModal('loginModal'); }
+
     function openModal(id) { document.getElementById(id).classList.add('visible'); if (id === 'cartModal') renderCartModal(); }
     function closeAllModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('visible')); }
     function openAdminPanel(pg) { openModal('adminModal'); window.showAdminPage(pg); }
@@ -431,14 +500,13 @@
         const p = findProduct(i.id);
         if (p) { p.quantity = Math.max(0, p.quantity - i.quantity); updates.push(sb.from('products').update({ quantity: p.quantity }).eq('id', p.id)); }
       });
-      msg += `\n💰 *Total productos:* ${getUSD(tCUP).toFixed(2)} USD | ${Math.round(tCUP).toLocaleString()} CUP\n`;
-      msg += `\n🚚 *Mensajería:* El costo varía según la ubicación. Por favor confirmar el costo de envío al cliente.`;
+      msg += `\n💰 *Total productos:* ${getUSD(tCUP).toFixed(2)} USD | ${Math.round(tCUP).toLocaleString()} CUP\n\n🚚 *Mensajería:* El costo varía según la ubicación. Por favor confirmar el costo de envío al cliente.`;
       try { await Promise.all(updates); await fetchStoreData(); } catch(e) {}
       window.open(`https://wa.me/${(storeData.whatsappNumber || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
       cart = []; updateCartBadge(); closeAllModals();
     }
 
-    /* ==================== ADMIN PAGES ==================== */
+    /* ==================== ADMIN ==================== */
     function showAdminPage(pg) {
       currentAdminPage = pg; editingSectionId = null; editingProductId = null;
       document.querySelectorAll('.admin-tab').forEach(b => { const a = b.dataset.page === pg; b.style.background = a ? 'rgba(217,79,48,0.15)' : ''; b.style.color = a ? '#D94F30' : '#6B7280'; });
@@ -460,27 +528,26 @@
           <div class="bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-[10px] mb-1">AGOTADOS</p><p class="text-2xl font-bold ${out ? 'text-red-400' : 'text-green-400'}">${out}</p></div>
         </div>
         <div class="mt-4 bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-xs">Tasa: <span class="text-white font-bold">1 USD = <span style="color:#D94F30;">${Math.round(storeData.exchangeRate).toLocaleString()}</span> CUP</span></p></div>
-        ${!storeData.adminEmails.length ? '<div class="mt-4 bg-yellow-900/20 border border-yellow-700/40 rounded-xl p-4"><p class="text-yellow-400 text-sm font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Configura al menos un email admin en Config para proteger el acceso.</p></div>' : `<div class="mt-4 bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-xs"><i class="fas fa-shield-halved mr-1" style="color:#16A34A;"></i>Admins autorizados: <span class="text-white font-bold">${storeData.adminEmails.length}</span></p></div>`}`;
+        ${!storeData.adminEmails.length ? '<div class="mt-4 bg-yellow-900/20 border border-yellow-700/40 rounded-xl p-4"><p class="text-yellow-400 text-sm font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Configura al menos un email admin en Config.</p></div>' : `<div class="mt-4 bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-xs"><i class="fas fa-shield-halved mr-1" style="color:#16A34A;"></i>Admins: <span class="text-white font-bold">${storeData.adminEmails.length}</span></p></div>`}`;
     }
 
     function renderAdminFeatured(el) {
       const fp = (storeData.featuredProducts || []).map(Number);
       const all = getAllProducts(), feat = all.filter(p => fp.includes(p.id)), noFeat = all.filter(p => !fp.includes(p.id));
-      let h = '<p class="text-gray-400 text-xs mb-4">Toca la estrella para marcar o quitar productos destacados.</p>';
+      let h = '<p class="text-gray-400 text-xs mb-4">Toca la estrella para marcar o quitar destacados.</p>';
       if (feat.length) {
         h += `<p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wider"><i class="fas fa-star mr-1" style="color:#FBBF24;"></i>Destacados (${feat.length})</p><div class="space-y-2 mb-6">`;
         feat.forEach(p => { h += `<div class="bg-adminCard rounded-xl p-3 border border-yellow-900/30 flex items-center gap-3"><img src="${p.image_url || ''}" class="w-10 h-10 rounded-lg object-cover bg-gray-800"><div class="flex-grow min-w-0"><p class="text-sm font-bold truncate">${p.name}</p><p class="text-xs" style="color:#D94F30;">${fmtPrice(p.priceCUP)}</p></div><button type="button" onclick="window.toggleFeatured(${p.id})" class="star-btn active text-xl"><i class="fas fa-star"></i></button></div>`; });
         h += '</div>';
       }
       if (noFeat.length) {
-        h += `<p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wider">Otros productos (${noFeat.length})</p><div class="space-y-2">`;
+        h += `<p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wider">Otros (${noFeat.length})</p><div class="space-y-2">`;
         noFeat.forEach(p => { h += `<div class="bg-adminCard rounded-xl p-3 border border-gray-700 flex items-center gap-3"><img src="${p.image_url || ''}" class="w-10 h-10 rounded-lg object-cover bg-gray-800"><div class="flex-grow min-w-0"><p class="text-sm font-bold truncate">${p.name}</p><p class="text-xs text-gray-400">${fmtPrice(p.priceCUP)}</p></div><button type="button" onclick="window.toggleFeatured(${p.id})" class="star-btn text-xl text-gray-600"><i class="far fa-star"></i></button></div>`; });
         h += '</div>';
       }
       if (!all.length) h += '<p class="text-center text-gray-500 py-8 text-sm">No hay productos.</p>';
       el.innerHTML = h;
     }
-
     window.toggleFeatured = async function(pId) {
       const fp = (storeData.featuredProducts || []).map(Number);
       const idx = fp.indexOf(Number(pId));
@@ -494,39 +561,22 @@
       let l = '';
       storeData.sections.forEach(s => {
         const c = (s.products||[]).length;
-        l += `<div class="bg-adminCard rounded-xl p-4 border border-gray-700 flex justify-between items-center gap-3">
-          <div class="flex items-center gap-3 min-w-0"><div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style="background:rgba(217,79,48,0.12);"><i class="${s.icon || 'fas fa-gift'}" style="color:#D94F30;"></i></div>
-          <div class="min-w-0"><span class="font-bold text-sm block truncate">${s.name}</span><span class="text-gray-500 text-xs">${c} producto${c!==1?'s':''}</span></div></div>
-          <div class="flex gap-2 shrink-0"><button type="button" onclick="window.renderSectionForm(${s.id})" class="px-3 py-2 rounded-lg bg-gray-700 text-xs font-bold hover:bg-gray-600 transition">Editar</button><button type="button" onclick="window.deleteSection(${s.id})" class="px-3 py-2 rounded-lg bg-red-900/30 text-red-400 text-xs font-bold hover:bg-red-900/50 transition">Eliminar</button></div></div>`;
+        l += `<div class="bg-adminCard rounded-xl p-4 border border-gray-700 flex justify-between items-center gap-3"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style="background:rgba(217,79,48,0.12);"><i class="${s.icon || 'fas fa-gift'}" style="color:#D94F30;"></i></div><div class="min-w-0"><span class="font-bold text-sm block truncate">${s.name}</span><span class="text-gray-500 text-xs">${c} producto${c!==1?'s':''}</span></div></div><div class="flex gap-2 shrink-0"><button type="button" onclick="window.renderSectionForm(${s.id})" class="px-3 py-2 rounded-lg bg-gray-700 text-xs font-bold hover:bg-gray-600 transition">Editar</button><button type="button" onclick="window.deleteSection(${s.id})" class="px-3 py-2 rounded-lg bg-red-900/30 text-red-400 text-xs font-bold hover:bg-red-900/50 transition">Eliminar</button></div></div>`;
       });
       el.innerHTML = `<button type="button" onclick="window.renderSectionForm(null)" class="w-full px-4 py-3 rounded-xl font-bold text-white text-sm btn-accent mb-4"><i class="fas fa-plus mr-2"></i>Nueva Sección</button><div class="space-y-3">${l}</div>`;
     }
     window.renderSectionForm = function(id) {
       editingSectionId = id; const s = id ? storeData.sections.find(x => x.id === Number(id)) : null;
-      document.getElementById('adminContent').innerHTML = `<button type="button" onclick="window.showAdminPage('sections')" class="text-gray-400 hover:text-white mb-4 inline-flex items-center gap-2 text-sm"><i class="fas fa-arrow-left"></i>Volver</button>
-        <h3 class="font-display text-lg font-bold mb-4">${s ? 'Editar' : 'Nueva'} Sección</h3>
-        <div class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Nombre *</label><input id="sf_name" type="text" value="${s ? s.name : ''}" class="admin-input"></div>
-        <div><label class="block text-xs text-gray-400 mb-1">Icono</label><input id="sf_icon" type="text" value="${s ? s.icon : 'fas fa-gift'}" class="admin-input"><p class="text-[10px] text-gray-500 mt-1"><a href="https://fontawesome.com/icons" target="_blank" style="color:#D94F30;" class="underline">Ver iconos</a></p></div>
-        <button type="button" onclick="window.saveSection()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar</button></div>`;
+      document.getElementById('adminContent').innerHTML = `<button type="button" onclick="window.showAdminPage('sections')" class="text-gray-400 hover:text-white mb-4 inline-flex items-center gap-2 text-sm"><i class="fas fa-arrow-left"></i>Volver</button><h3 class="font-display text-lg font-bold mb-4">${s ? 'Editar' : 'Nueva'} Sección</h3><div class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Nombre *</label><input id="sf_name" type="text" value="${s ? s.name : ''}" class="admin-input"></div><div><label class="block text-xs text-gray-400 mb-1">Icono</label><input id="sf_icon" type="text" value="${s ? s.icon : 'fas fa-gift'}" class="admin-input"><p class="text-[10px] text-gray-500 mt-1"><a href="https://fontawesome.com/icons" target="_blank" style="color:#D94F30;" class="underline">Ver iconos</a></p></div><button type="button" onclick="window.saveSection()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar</button></div>`;
     };
     window.saveSection = async function() {
       const name = document.getElementById('sf_name').value.trim(), icon = document.getElementById('sf_icon').value.trim() || 'fas fa-gift';
       if (!name) { showToast('Nombre obligatorio', 'error'); return; }
-      try {
-        if (editingSectionId) await sb.from('sections').update({ name, icon }).eq('id', editingSectionId);
-        else await sb.from('sections').insert({ name, icon });
-        showToast('Sección guardada', 'success'); await fetchStoreData(); window.showAdminPage('sections');
-      } catch(e) { showToast('Error: ' + e.message, 'error'); }
+      try { if (editingSectionId) await sb.from('sections').update({ name, icon }).eq('id', editingSectionId); else await sb.from('sections').insert({ name, icon }); showToast('Sección guardada', 'success'); await fetchStoreData(); window.showAdminPage('sections'); } catch(e) { showToast('Error: ' + e.message, 'error'); }
     };
     window.deleteSection = async function(id) {
       if (!confirm('¿Eliminar sección y sus productos?')) return;
-      try {
-        const sec = storeData.sections.find(s => s.id === Number(id));
-        if (sec) { const pIds = sec.products.map(p => p.id); await sb.from('store_settings').update({ "featuredProducts": storeData.featuredProducts.filter(fid => !pIds.includes(fid)) }).eq('id', 1); }
-        await sb.from('products').delete().eq('section_id', id);
-        await sb.from('sections').delete().eq('id', id);
-        showToast('Eliminada', 'success'); await fetchStoreData(); window.showAdminPage('sections');
-      } catch(e) { showToast('Error: ' + e.message, 'error'); }
+      try { const sec = storeData.sections.find(s => s.id === Number(id)); if (sec) { const pIds = sec.products.map(p => p.id); await sb.from('store_settings').update({ "featuredProducts": storeData.featuredProducts.filter(fid => !pIds.includes(fid)) }).eq('id', 1); } await sb.from('products').delete().eq('section_id', id); await sb.from('sections').delete().eq('id', id); showToast('Eliminada', 'success'); await fetchStoreData(); window.showAdminPage('sections'); } catch(e) { showToast('Error: ' + e.message, 'error'); }
     };
 
     /* --- Productos --- */
@@ -537,48 +587,16 @@
       const sec = storeData.sections[adminSelectedSection];
       const fp = (storeData.featuredProducts || []).map(Number);
       let pH = '';
-      if (sec && sec.products) {
-        sec.products.forEach(p => {
-          if (!p) return; const isF = fp.includes(p.id);
-          pH += `<div class="bg-adminCard rounded-xl border ${isF ? 'border-yellow-900/40' : 'border-gray-700'} overflow-hidden relative">
-            <button type="button" onclick="window.toggleFeatured(${p.id})" class="star-btn ${isF ? 'active' : ''} absolute top-2 right-2 z-10 w-8 h-8 rounded-full flex items-center justify-center text-sm ${isF ? 'bg-yellow-900/40 text-yellow-400' : 'bg-black/40 text-gray-400'}"><i class="${isF ? 'fas' : 'far'} fa-star"></i></button>
-            <img src="${p.image_url || 'https://picsum.photos/seed/d'+p.id+'/400/400'}" class="w-full h-28 object-cover bg-gray-800">
-            <div class="p-3">
-              <div class="flex items-start justify-between gap-1 mb-0.5"><h4 class="font-bold text-xs truncate flex-1">${p.name}</h4>${isF ? '<span class="text-[8px] bg-yellow-900/40 text-yellow-400 px-1.5 py-0.5 rounded-full shrink-0">DESTACADO</span>' : ''}</div>
-              <p class="text-sm font-bold mb-1" style="color:#D94F30;">${fmtPrice(p.priceCUP)}</p>
-              <p class="text-[10px] mb-2 ${p.quantity > 0 ? 'text-green-400' : 'text-red-400'}"><i class="fas fa-boxes-stacked mr-1"></i>Stock: ${p.quantity}</p>
-              <div class="flex gap-2">
-                <button type="button" onclick="window.renderProductForm(${sec.id}, ${p.id})" class="flex-1 py-1.5 rounded-lg bg-gray-700 text-[11px] font-bold hover:bg-gray-600 transition">Editar</button>
-                <button type="button" onclick="window.deleteProduct(${p.id})" class="flex-1 py-1.5 rounded-lg bg-red-900/30 text-red-400 text-[11px] font-bold hover:bg-red-900/50 transition">Eliminar</button>
-              </div>
-            </div></div>`;
-        });
-      }
-      el.innerHTML = `<div class="flex flex-col gap-3 mb-4"><select id="adminSectionSelect" class="admin-input text-sm">${sH}</select>
-        <button type="button" onclick="window.renderProductForm(${sec.id}, null)" class="w-full px-4 py-3 rounded-xl font-bold text-white text-sm btn-accent"><i class="fas fa-plus mr-2"></i>Nuevo en "${sec.name}"</button></div>
-        <div class="grid grid-cols-2 gap-3">${pH || '<p class="col-span-2 text-center text-gray-500 text-sm py-6">Sin productos.</p>'}</div>`;
+      if (sec && sec.products) { sec.products.forEach(p => { if (!p) return; const isF = fp.includes(p.id); pH += `<div class="bg-adminCard rounded-xl border ${isF ? 'border-yellow-900/40' : 'border-gray-700'} overflow-hidden relative"><button type="button" onclick="window.toggleFeatured(${p.id})" class="star-btn ${isF ? 'active' : ''} absolute top-2 right-2 z-10 w-8 h-8 rounded-full flex items-center justify-center text-sm ${isF ? 'bg-yellow-900/40 text-yellow-400' : 'bg-black/40 text-gray-400'}"><i class="${isF ? 'fas' : 'far'} fa-star"></i></button><img src="${p.image_url || 'https://picsum.photos/seed/d'+p.id+'/400/400'}" class="w-full h-28 object-cover bg-gray-800"><div class="p-3"><div class="flex items-start justify-between gap-1 mb-0.5"><h4 class="font-bold text-xs truncate flex-1">${p.name}</h4>${isF ? '<span class="text-[8px] bg-yellow-900/40 text-yellow-400 px-1.5 py-0.5 rounded-full shrink-0">DESTACADO</span>' : ''}</div><p class="text-sm font-bold mb-1" style="color:#D94F30;">${fmtPrice(p.priceCUP)}</p><p class="text-[10px] mb-2 ${p.quantity > 0 ? 'text-green-400' : 'text-red-400'}"><i class="fas fa-boxes-stacked mr-1"></i>Stock: ${p.quantity}</p><div class="flex gap-2"><button type="button" onclick="window.renderProductForm(${sec.id}, ${p.id})" class="flex-1 py-1.5 rounded-lg bg-gray-700 text-[11px] font-bold hover:bg-gray-600 transition">Editar</button><button type="button" onclick="window.deleteProduct(${p.id})" class="flex-1 py-1.5 rounded-lg bg-red-900/30 text-red-400 text-[11px] font-bold hover:bg-red-900/50 transition">Eliminar</button></div></div></div>`; }); }
+      el.innerHTML = `<div class="flex flex-col gap-3 mb-4"><select id="adminSectionSelect" class="admin-input text-sm">${sH}</select><button type="button" onclick="window.renderProductForm(${sec.id}, null)" class="w-full px-4 py-3 rounded-xl font-bold text-white text-sm btn-accent"><i class="fas fa-plus mr-2"></i>Nuevo en "${sec.name}"</button></div><div class="grid grid-cols-2 gap-3">${pH || '<p class="col-span-2 text-center text-gray-500 text-sm py-6">Sin productos.</p>'}</div>`;
       setTimeout(() => { const sel = document.getElementById('adminSectionSelect'); if (sel) sel.onchange = function() { adminSelectedSection = parseInt(this.value); renderProductList(document.getElementById('adminContent')); }; }, 50);
     }
-
     window.renderProductForm = function(secId, prodId) {
       editingProductSectionId = secId; editingProductId = prodId;
       const s = storeData.sections.find(x => x.id === Number(secId));
       const p = prodId ? s?.products.find(x => x.id === Number(prodId)) : null;
       const rate = Number(storeData.exchangeRate) || 300;
-      document.getElementById('adminContent').innerHTML = `
-        <button type="button" onclick="window.showAdminPage('products')" class="text-gray-400 hover:text-white mb-4 inline-flex items-center gap-2 text-sm"><i class="fas fa-arrow-left"></i>Volver</button>
-        <h3 class="font-display text-lg font-bold mb-1">${p ? 'Editar' : 'Nuevo'} Producto</h3>
-        <p class="text-xs text-gray-500 mb-4">Sección: <span style="color:#D94F30;">${s?.name}</span></p>
-        <div class="space-y-3">
-          <div><label class="block text-xs text-gray-400 mb-1">Nombre *</label><input id="pf_name" type="text" value="${p ? p.name : ''}" class="admin-input"></div>
-          <div class="grid grid-cols-2 gap-3">
-            <div><label class="block text-xs text-gray-400 mb-1">Precio (CUP) *</label><input id="pf_priceCUP" type="number" min="0" value="${p ? p.priceCUP : 0}" class="admin-input" oninput="document.getElementById('pf_usd').textContent=(Number(this.value)/${rate}).toFixed(2)"><p class="text-[10px] text-gray-500 mt-1">≈ <span id="pf_usd">${getUSD(p ? p.priceCUP : 0).toFixed(2)}</span> USD</p></div>
-            <div><label class="block text-xs text-gray-400 mb-1">Stock *</label><input id="pf_quantity" type="number" min="0" value="${p ? p.quantity : 10}" class="admin-input"></div>
-          </div>
-          <div><label class="block text-xs text-gray-400 mb-1"><i class="fas fa-image mr-1"></i>Imagen</label><input type="file" id="pf_file" accept="image/*" class="admin-input text-xs py-2">
-          <img id="pf_preview" src="${p ? p.image_url : ''}" class="w-full h-32 object-contain rounded-xl mt-2 bg-gray-800 border border-gray-700 ${p?.image_url ? '' : 'hidden'}"></div>
-          <button type="button" id="saveProdBtn" onclick="window.saveProduct()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar Producto</button>
-        </div>`;
+      document.getElementById('adminContent').innerHTML = `<button type="button" onclick="window.showAdminPage('products')" class="text-gray-400 hover:text-white mb-4 inline-flex items-center gap-2 text-sm"><i class="fas fa-arrow-left"></i>Volver</button><h3 class="font-display text-lg font-bold mb-1">${p ? 'Editar' : 'Nuevo'} Producto</h3><p class="text-xs text-gray-500 mb-4">Sección: <span style="color:#D94F30;">${s?.name}</span></p><div class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Nombre *</label><input id="pf_name" type="text" value="${p ? p.name : ''}" class="admin-input"></div><div class="grid grid-cols-2 gap-3"><div><label class="block text-xs text-gray-400 mb-1">Precio (CUP) *</label><input id="pf_priceCUP" type="number" min="0" value="${p ? p.priceCUP : 0}" class="admin-input" oninput="document.getElementById('pf_usd').textContent=(Number(this.value)/${rate}).toFixed(2)"><p class="text-[10px] text-gray-500 mt-1">≈ <span id="pf_usd">${getUSD(p ? p.priceCUP : 0).toFixed(2)}</span> USD</p></div><div><label class="block text-xs text-gray-400 mb-1">Stock *</label><input id="pf_quantity" type="number" min="0" value="${p ? p.quantity : 10}" class="admin-input"></div></div><div><label class="block text-xs text-gray-400 mb-1"><i class="fas fa-image mr-1"></i>Imagen</label><input type="file" id="pf_file" accept="image/*" class="admin-input text-xs py-2"><img id="pf_preview" src="${p ? p.image_url : ''}" class="w-full h-32 object-contain rounded-xl mt-2 bg-gray-800 border border-gray-700 ${p?.image_url ? '' : 'hidden'}"></div><button type="button" id="saveProdBtn" onclick="window.saveProduct()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar Producto</button></div>`;
       setTimeout(() => { const f = document.getElementById('pf_file'); if (f) f.onchange = function() { const pr = document.getElementById('pf_preview'); if (this.files[0]) { pr.src = URL.createObjectURL(this.files[0]); pr.classList.remove('hidden'); } }; }, 50);
     };
     window.saveProduct = async function() {
@@ -587,48 +605,16 @@
       if (!name) { showToast('Nombre obligatorio', 'error'); return; }
       if (priceCUP <= 0) { showToast('Precio > 0', 'error'); return; }
       btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
-      try {
-        let imgUrl = editingProductId ? (findProduct(editingProductId)?.image_url || '') : '';
-        if (file) { imgUrl = await uploadImage(file); if (!imgUrl) { btn.disabled = false; btn.innerHTML = 'Guardar Producto'; return; } }
-        if (!imgUrl) imgUrl = `https://picsum.photos/seed/${Date.now()}/400/400`;
-        const payload = { name, "priceCUP": priceCUP, quantity, "image_url": imgUrl, "section_id": Number(editingProductSectionId) };
-        if (editingProductId) await sb.from('products').update(payload).eq('id', editingProductId);
-        else await sb.from('products').insert(payload);
-        showToast('Producto guardado', 'success'); await fetchStoreData(); window.showAdminPage('products');
-      } catch(e) { showToast('Error: ' + e.message, 'error'); btn.disabled = false; btn.innerHTML = 'Guardar Producto'; }
+      try { let imgUrl = editingProductId ? (findProduct(editingProductId)?.image_url || '') : ''; if (file) { imgUrl = await uploadImage(file); if (!imgUrl) { btn.disabled = false; btn.innerHTML = 'Guardar Producto'; return; } } if (!imgUrl) imgUrl = `https://picsum.photos/seed/${Date.now()}/400/400`; const payload = { name, "priceCUP": priceCUP, quantity, "image_url": imgUrl, "section_id": Number(editingProductSectionId) }; if (editingProductId) await sb.from('products').update(payload).eq('id', editingProductId); else await sb.from('products').insert(payload); showToast('Producto guardado', 'success'); await fetchStoreData(); window.showAdminPage('products'); } catch(e) { showToast('Error: ' + e.message, 'error'); btn.disabled = false; btn.innerHTML = 'Guardar Producto'; }
     };
     window.deleteProduct = async function(pId) {
       if (!confirm('¿Eliminar este producto?')) return;
-      try {
-        await sb.from('products').delete().eq('id', pId);
-        await sb.from('store_settings').update({ "featuredProducts": storeData.featuredProducts.filter(id => id !== Number(pId)) }).eq('id', 1);
-        showToast('Eliminado', 'success'); await fetchStoreData(); renderProductList(document.getElementById('adminContent'));
-      } catch(e) { showToast('Error: ' + e.message, 'error'); }
+      try { await sb.from('products').delete().eq('id', pId); await sb.from('store_settings').update({ "featuredProducts": storeData.featuredProducts.filter(id => id !== Number(pId)) }).eq('id', 1); showToast('Eliminado', 'success'); await fetchStoreData(); renderProductList(document.getElementById('adminContent')); } catch(e) { showToast('Error: ' + e.message, 'error'); }
     };
 
     /* --- Aspecto --- */
     function renderAppearance(el) {
-      el.innerHTML = `<div class="space-y-4">
-        <div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4">
-          <h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fas fa-font mr-2"></i>Textos</h3>
-          <div><label class="block text-xs text-gray-400 mb-1">Nombre de la tienda</label><input id="ap_name" type="text" value="${storeData.storeName || ''}" class="admin-input"></div>
-          <div><label class="block text-xs text-gray-400 mb-1">Subtítulo (debajo del logo)</label><input id="ap_sub" type="text" value="${storeData.heroSubtitle || ''}" class="admin-input"></div>
-        </div>
-        <div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4">
-          <h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fas fa-palette mr-2"></i>Colores</h3>
-          <div class="grid grid-cols-3 gap-3">
-            <div><label class="block text-xs text-gray-400 mb-1">Fondo</label><input id="ap_bg" type="color" value="${storeData.backgroundColor || '#FDFBF7'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div>
-            <div><label class="block text-xs text-gray-400 mb-1">Texto</label><input id="ap_fg" type="color" value="${storeData.headerColor || '#1A1A1A'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div>
-            <div><label class="block text-xs text-gray-400 mb-1">Acento</label><input id="ap_ac" type="color" value="${storeData.accentColor || '#D94F30'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div>
-          </div>
-          <div class="grid grid-cols-4 gap-2">
-            <button type="button" onclick="document.getElementById('ap_bg').value='#FDFBF7';document.getElementById('ap_fg').value='#1A1A1A';document.getElementById('ap_ac').value='#D94F30';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FDFBF7 50%,#D94F30 50%);color:#1A1A1A;">Terracota</button>
-            <button type="button" onclick="document.getElementById('ap_bg').value='#FFFAFC';document.getElementById('ap_fg').value='#1A1A1A';document.getElementById('ap_ac').value='#E91E8C';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FFFAFC 50%,#E91E8C 50%);color:#1A1A1A;">Fucsia</button>
-            <button type="button" onclick="document.getElementById('ap_bg').value='#F0FFF4';document.getElementById('ap_fg').value='#1A3A2A';document.getElementById('ap_ac').value='#2E7D32';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#F0FFF4 50%,#2E7D32 50%);color:#1A3A2A;">Verde</button>
-            <button type="button" onclick="document.getElementById('ap_bg').value='#FFF8E1';document.getElementById('ap_fg').value='#33291A';document.getElementById('ap_ac').value='#F9A825';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FFF8E1 50%,#F9A825 50%);color:#33291A;">Dorado</button>
-          </div>
-        </div>
-        <button type="button" onclick="window.saveAppearance()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar Aspecto</button></div>`;
+      el.innerHTML = `<div class="space-y-4"><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fas fa-font mr-2"></i>Textos</h3><div><label class="block text-xs text-gray-400 mb-1">Nombre de la tienda</label><input id="ap_name" type="text" value="${storeData.storeName || ''}" class="admin-input"></div><div><label class="block text-xs text-gray-400 mb-1">Subtítulo</label><input id="ap_sub" type="text" value="${storeData.heroSubtitle || ''}" class="admin-input"></div></div><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fas fa-palette mr-2"></i>Colores</h3><div class="grid grid-cols-3 gap-3"><div><label class="block text-xs text-gray-400 mb-1">Fondo</label><input id="ap_bg" type="color" value="${storeData.backgroundColor || '#FDFBF7'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div><div><label class="block text-xs text-gray-400 mb-1">Texto</label><input id="ap_fg" type="color" value="${storeData.headerColor || '#1A1A1A'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div><div><label class="block text-xs text-gray-400 mb-1">Acento</label><input id="ap_ac" type="color" value="${storeData.accentColor || '#D94F30'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div></div><div class="grid grid-cols-4 gap-2"><button type="button" onclick="document.getElementById('ap_bg').value='#FDFBF7';document.getElementById('ap_fg').value='#1A1A1A';document.getElementById('ap_ac').value='#D94F30';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FDFBF7 50%,#D94F30 50%);color:#1A1A1A;">Terracota</button><button type="button" onclick="document.getElementById('ap_bg').value='#FFFAFC';document.getElementById('ap_fg').value='#1A1A1A';document.getElementById('ap_ac').value='#E91E8C';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FFFAFC 50%,#E91E8C 50%);color:#1A1A1A;">Fucsia</button><button type="button" onclick="document.getElementById('ap_bg').value='#F0FFF4';document.getElementById('ap_fg').value='#1A3A2A';document.getElementById('ap_ac').value='#2E7D32';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#F0FFF4 50%,#2E7D32 50%);color:#1A3A2A;">Verde</button><button type="button" onclick="document.getElementById('ap_bg').value='#FFF8E1';document.getElementById('ap_fg').value='#33291A';document.getElementById('ap_ac').value='#F9A825';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FFF8E1 50%,#F9A825 50%);color:#33291A;">Dorado</button></div></div><button type="button" onclick="window.saveAppearance()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar Aspecto</button></div>`;
     }
     window.saveAppearance = async function() {
       try { await sb.from('store_settings').update({ "storeName": document.getElementById('ap_name').value.trim(), "heroSubtitle": document.getElementById('ap_sub').value.trim(), "backgroundColor": document.getElementById('ap_bg').value, "headerColor": document.getElementById('ap_fg').value, "accentColor": document.getElementById('ap_ac').value }).eq('id', 1); showToast('Aspecto actualizado', 'success'); await fetchStoreData(); } catch(e) { showToast('Error: ' + e.message, 'error'); }
@@ -639,37 +625,16 @@
       const admins = storeData.adminEmails || [];
       let aH = '';
       admins.forEach((email, i) => {
-        aH += `<div class="flex items-center gap-3 bg-gray-800 p-3 rounded-lg border border-gray-700">
-          <i class="fas fa-envelope text-gray-500"></i>
-          <span class="flex-1 text-sm truncate">${email}</span>
-          <button type="button" onclick="window.removeAdminEmail(${i})" class="text-red-400 text-xs hover:text-red-300 transition"><i class="fas fa-trash"></i></button>
-        </div>`;
+        aH += `<div class="flex items-center gap-3 bg-gray-800 p-3 rounded-lg border border-gray-700"><i class="fas fa-envelope text-gray-500"></i><span class="flex-1 text-sm truncate">${email}</span><button type="button" onclick="window.removeAdminEmail(${i})" class="text-red-400 text-xs hover:text-red-300 transition"><i class="fas fa-trash"></i></button></div>`;
       });
-      el.innerHTML = `<div class="space-y-4">
-        <div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4">
-          <h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fas fa-shield-halved mr-2"></i>Emails administradores</h3>
-          <p class="text-gray-500 text-xs">Solo estos emails podrán acceder al panel. Necesitan email + contraseña válida en Supabase Auth.</p>
-          <div class="space-y-2 max-h-48 overflow-y-auto admin-scroll">${aH || '<p class="text-xs text-gray-500 text-center py-4">Sin emails configurados</p>'}</div>
-          <div class="flex gap-2">
-            <input id="st_newAdmin" type="email" placeholder="nuevo@ejemplo.com" class="admin-input flex-1 text-sm py-2">
-            <button type="button" onclick="window.addAdminEmail()" class="px-4 py-2 rounded-lg bg-gray-700 text-xs font-bold hover:bg-gray-600 transition shrink-0"><i class="fas fa-plus mr-1"></i>Añadir</button>
-          </div>
-          <p class="text-[10px] text-yellow-500"><i class="fas fa-exclamation-triangle mr-1"></i>El email debe estar registrado en Supabase Auth (Authentication > Users). Si no existe, créalo primero ahí.</p>
-        </div>
-        <div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4">
-          <h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fab fa-whatsapp mr-2"></i>Ventas</h3>
-          <div><label class="block text-xs text-gray-400 mb-1">WhatsApp (solo números, con país)</label><input id="st_wa" type="text" value="${storeData.whatsappNumber || ''}" class="admin-input" placeholder="5355555555"></div>
-          <div><label class="block text-xs text-gray-400 mb-1">1 USD =</label><div class="flex items-center gap-2"><input id="st_ex" type="number" value="${storeData.exchangeRate || 300}" class="admin-input"><span class="text-gray-400 font-bold text-sm">CUP</span></div></div>
-        </div>
-        <button type="button" onclick="window.saveSettings()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar Configuración</button></div>`;
+      el.innerHTML = `<div class="space-y-4"><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fas fa-shield-halved mr-2"></i>Emails administradores</h3><p class="text-gray-500 text-xs">Solo estos emails podrán acceder. Deben existir en Supabase Auth con su contraseña.</p><div class="space-y-2 max-h-48 overflow-y-auto admin-scroll">${aH || '<p class="text-xs text-gray-500 text-center py-4">Sin emails configurados</p>'}</div><div class="flex gap-2"><input id="st_newAdmin" type="email" placeholder="nuevo@ejemplo.com" class="admin-input flex-1 text-sm py-2"><button type="button" onclick="window.addAdminEmail()" class="px-4 py-2 rounded-lg bg-gray-700 text-xs font-bold hover:bg-gray-600 transition shrink-0"><i class="fas fa-plus mr-1"></i>Añadir</button></div><p class="text-[10px] text-yellow-500"><i class="fas fa-exclamation-triangle mr-1"></i>El email debe estar registrado en Supabase Auth (Authentication > Users).</p></div><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fab fa-whatsapp mr-2"></i>Ventas</h3><div><label class="block text-xs text-gray-400 mb-1">WhatsApp (solo números, con país)</label><input id="st_wa" type="text" value="${storeData.whatsappNumber || ''}" class="admin-input" placeholder="5355555555"></div><div><label class="block text-xs text-gray-400 mb-1">1 USD =</label><div class="flex items-center gap-2"><input id="st_ex" type="number" value="${storeData.exchangeRate || 300}" class="admin-input"><span class="text-gray-400 font-bold text-sm">CUP</span></div></div></div><button type="button" onclick="window.saveSettings()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar Configuración</button></div>`;
     }
-
     window.addAdminEmail = async function() {
       const email = document.getElementById('st_newAdmin').value.trim().toLowerCase();
       if (!email || !email.includes('@')) { showToast('Escribe un email válido', 'error'); return; }
       if (storeData.adminEmails.includes(email)) { showToast('Ese email ya está agregado', 'error'); return; }
       storeData.adminEmails.push(email);
-      try { await sb.from('store_settings').update({ "adminEmails": storeData.adminEmails }).eq('id', 1); showToast('Email admin añadido', 'success'); await fetchStoreData(); renderSettings(document.getElementById('adminContent')); } catch(e) { showToast('Error', 'error'); }
+      try { await sb.from('store_settings').update({ "adminEmails": storeData.adminEmails }).eq('id', 1); showToast('Email añadido', 'success'); await fetchStoreData(); renderSettings(document.getElementById('adminContent')); } catch(e) { showToast('Error', 'error'); }
     };
     window.removeAdminEmail = async function(i) {
       if (storeData.adminEmails.length <= 1) { showToast('Debe haber al menos un email admin', 'error'); return; }
@@ -677,12 +642,7 @@
       try { await sb.from('store_settings').update({ "adminEmails": storeData.adminEmails }).eq('id', 1); showToast('Email eliminado', 'success'); await fetchStoreData(); renderSettings(document.getElementById('adminContent')); } catch(e) {}
     };
     window.saveSettings = async function() {
-      try {
-        storeData.whatsappNumber = document.getElementById('st_wa').value.trim();
-        storeData.exchangeRate = Number(document.getElementById('st_ex').value) || 300;
-        await sb.from('store_settings').update({ "whatsappNumber": storeData.whatsappNumber, "exchangeRate": storeData.exchangeRate }).eq('id', 1);
-        showToast('Configuración guardada', 'success'); await fetchStoreData();
-      } catch(e) { showToast('Error: ' + e.message, 'error'); }
+      try { storeData.whatsappNumber = document.getElementById('st_wa').value.trim(); storeData.exchangeRate = Number(document.getElementById('st_ex').value) || 300; await sb.from('store_settings').update({ "whatsappNumber": storeData.whatsappNumber, "exchangeRate": storeData.exchangeRate }).eq('id', 1); showToast('Configuración guardada', 'success'); await fetchStoreData(); } catch(e) { showToast('Error: ' + e.message, 'error'); }
     };
 
     /* ==================== INIT ==================== */
