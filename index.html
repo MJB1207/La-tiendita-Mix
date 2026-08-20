@@ -28,90 +28,36 @@
     html { scroll-behavior: smooth; }
     body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; max-width: 100vw; }
     .font-display { font-family: 'Playfair Display', serif; }
-
-    /* HERO */
-    .hero-section {
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(170deg, #FDFBF7 0%, #FEF0EC 45%, #FDE8DF 100%);
-      position: relative; overflow: hidden;
-    }
-    .hero-dots {
-      position: absolute; inset: 0; pointer-events: none;
-      background-image: radial-gradient(circle at 2px 2px, rgba(217,79,48,0.05) 1px, transparent 0);
-      background-size: 28px 28px;
-    }
-    .hero-glow {
-      position: absolute; width: 400px; height: 400px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(217,79,48,0.08) 0%, transparent 70%);
-      top: 10%; right: -100px; pointer-events: none;
-    }
-    .hero-glow-2 {
-      position: absolute; width: 300px; height: 300px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(217,79,48,0.06) 0%, transparent 70%);
-      bottom: 10%; left: -80px; pointer-events: none;
-    }
-    .hero-logo-wrap {
-      width: 280px; height: 280px; border-radius: 50%; overflow: hidden;
-      box-shadow: 0 20px 60px rgba(217,79,48,0.18), 0 0 0 6px rgba(217,79,48,0.08);
-      margin: 0 auto 2rem; transition: transform 0.5s;
-      background: white;
-    }
+    .hero-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(170deg, #FDFBF7 0%, #FEF0EC 45%, #FDE8DF 100%); position: relative; overflow: hidden; }
+    .hero-dots { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(circle at 2px 2px, rgba(217,79,48,0.05) 1px, transparent 0); background-size: 28px 28px; }
+    .hero-glow { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(217,79,48,0.08) 0%, transparent 70%); top: 10%; right: -100px; pointer-events: none; }
+    .hero-glow-2 { position: absolute; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(217,79,48,0.06) 0%, transparent 70%); bottom: 10%; left: -80px; pointer-events: none; }
+    .hero-logo-wrap { width: 280px; height: 280px; border-radius: 50%; overflow: hidden; box-shadow: 0 20px 60px rgba(217,79,48,0.18), 0 0 0 6px rgba(217,79,48,0.08); margin: 0 auto 2rem; transition: transform 0.5s; background: white; }
     .hero-logo-wrap:hover { transform: scale(1.03); }
     .hero-logo-wrap img { width: 100%; height: 100%; object-fit: cover; }
-
-    /* FEATURED */
-    .featured-scroll {
-      display: flex; gap: 14px; overflow-x: auto; padding: 4px 0 16px;
-      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
+    .featured-scroll { display: flex; gap: 14px; overflow-x: auto; padding: 4px 0 16px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .featured-scroll::-webkit-scrollbar { display: none; }
-    .featured-card {
-      min-width: 165px; max-width: 165px; scroll-snap-align: start;
-      background: #fff; border-radius: 18px; overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid var(--border);
-      transition: transform 0.2s; flex-shrink: 0;
-    }
+    .featured-card { min-width: 165px; max-width: 165px; scroll-snap-align: start; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid var(--border); transition: transform 0.2s; flex-shrink: 0; }
     .featured-card:active { transform: scale(0.97); }
-
-    /* PRODUCT CARD */
-    .product-card {
-      border-radius: 18px; overflow: hidden; background: #fff;
-      border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-      transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column;
-    }
+    .product-card { border-radius: 18px; overflow: hidden; background: #fff; border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: transform 0.2s; display: flex; flex-direction: column; }
     .product-card:active { transform: scale(0.97); }
-    .product-card img { transition: transform 0.3s; }
-    .product-card:active img { transform: scale(1.05); }
-
-    /* TABS */
     .tab-btn { transition: all 0.3s; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; padding: 10px 16px; font-size: 14px; color: var(--fg); opacity: 0.6; }
     .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; opacity: 1; }
     .tabs-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .tabs-scroll::-webkit-scrollbar { display: none; }
-
-    /* MODALS */
     .modal-overlay { position: fixed; inset: 0; z-index: 1100; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
     .modal-overlay.visible { opacity: 1; pointer-events: all; }
     .modal-box { transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); width: 100%; max-height: 95vh; overflow-y: auto; border-radius: 24px 24px 0 0; }
     .modal-overlay.visible .modal-box { transform: translateY(0); }
-
-    /* BOTTOM NAV */
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(253,251,247,0.95); backdrop-filter: blur(14px); border-top: 1px solid var(--border); z-index: 900; padding-bottom: env(safe-area-inset-bottom, 0px); display: flex; }
     .bottom-nav button { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: #7A7068; transition: color 0.2s; padding: 10px 0; background: none; border: none; cursor: pointer; flex: 1; }
     .bottom-nav button.active { color: var(--accent); font-weight: 700; }
     .bottom-nav button i { font-size: 20px; }
-
-    /* TOAST */
     .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-120%); background: #1A1A1A; color: #fff; padding: 12px 24px; border-radius: 50px; font-size: 14px; z-index: 2000; transition: transform 0.4s; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
     .toast.show { transform: translateX(-50%) translateY(0); }
     .toast.success { background: #16A34A; }
     .toast.error { background: #DC2626; }
-
-    /* BADGE */
     .badge-cart { position: absolute; top: -4px; right: 8px; background: var(--accent); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-
-    /* ADMIN */
     .admin-scroll::-webkit-scrollbar { width: 4px; }
     .admin-scroll::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 2px; }
     .admin-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #374151; font-size: 15px; font-family: 'Lato', sans-serif; background: #1F2937; color: #f9fafb; }
@@ -120,35 +66,26 @@
     .star-btn:hover { transform: scale(1.2); }
     .star-btn.active { color: #FBBF24; animation: starPop 0.3s; }
     @keyframes starPop { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
-
-    /* BTN */
     .btn-accent { background: linear-gradient(135deg, #D94F30, #B83A20); color: white; box-shadow: 0 4px 16px rgba(217,79,48,0.25); transition: all 0.2s; }
     .btn-accent:hover { box-shadow: 0 6px 24px rgba(217,79,48,0.35); }
     .btn-accent:active { transform: scale(0.97); }
     .btn-accent-sm { background: linear-gradient(135deg, #D94F30, #B83A20); color: white; box-shadow: 0 2px 8px rgba(217,79,48,0.2); }
     .btn-accent-sm:active { transform: scale(0.95); }
-
-    /* LIGHTBOX */
     #lightbox { position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
     #lightbox.active { display: flex; }
     #lightbox img { max-width: 95vw; max-height: 90vh; object-fit: contain; border-radius: 8px; }
-
     .divider-line { width: 40px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, #D94F30, #B83A20); }
   </style>
 </head>
 <body>
 
-  <!-- ===== BOTTOM NAV ===== -->
   <nav class="bottom-nav">
     <button class="active" onclick="switchScreen('catalog')" id="navCatalog"><i class="fas fa-store"></i><span>Catálogo</span></button>
     <button onclick="switchScreen('cart')" id="navCart" class="relative"><i class="fas fa-shopping-bag"></i><span id="cartBadge" class="badge-cart hidden">0</span><span>Carrito</span></button>
     <button onclick="handleAdminClick()" id="navAdmin"><i class="fas fa-lock"></i><span>Admin</span></button>
   </nav>
 
-  <!-- ===== MAIN CATALOG SCREEN ===== -->
   <main id="screenCatalog" class="pb-24">
-
-    <!-- HERO -->
     <section class="hero-section">
       <div class="hero-dots"></div>
       <div class="hero-glow"></div>
@@ -158,29 +95,25 @@
           <img src="https://raw.githubusercontent.com/MJB1207/La-tiendita-Mix/5d4b412bb819a2402fac4052b42449c65f118f71/IMG-20260814-WA0012.jpg" alt="La Tiendita Mix">
         </div>
         <p id="heroSubtitle" class="uppercase tracking-[0.25em] text-xs mb-8 font-bold" style="color:var(--accent);">De todo un poquito por ti</p>
-        <a href="#featuredSection" class="btn-accent inline-block px-8 py-4 rounded-full font-bold text-base">
-          <i class="fas fa-bag-shopping mr-2"></i>Ver Catálogo
-        </a>
+        <a href="#featuredSection" class="btn-accent inline-block px-8 py-4 rounded-full font-bold text-base"><i class="fas fa-bag-shopping mr-2"></i>Ver Catálogo</a>
       </div>
     </section>
 
-    <!-- FEATURED -->
     <section id="featuredSection" class="py-10 px-4 hidden">
       <div class="max-w-lg mx-auto">
         <div class="flex items-center gap-3 mb-5">
           <i class="fas fa-star text-lg" style="color:#FBBF24;"></i>
-          <h2 class="font-display text-2xl font-bold" style="color:var(--fg);">Destacados</h2>
+          <h2 class="font-display text-2xl font-bold">Destacados</h2>
         </div>
         <div id="featuredScroll" class="featured-scroll"></div>
       </div>
     </section>
 
-    <!-- CATALOG -->
     <section id="catalogSection" class="py-10 px-4">
       <div class="max-w-lg mx-auto">
         <div class="text-center mb-6">
           <div class="divider-line mx-auto mb-3"></div>
-          <h2 class="font-display text-2xl font-bold" style="color:var(--fg);">Nuestro Catálogo</h2>
+          <h2 class="font-display text-2xl font-bold">Nuestro Catálogo</h2>
           <p class="text-drift text-sm mt-1">Encuentra lo que buscas</p>
         </div>
         <div id="sectionTabs" class="tabs-scroll flex gap-1 mb-6 border-b" style="border-color:var(--border);"></div>
@@ -189,16 +122,14 @@
     </section>
   </main>
 
-  <!-- LIGHTBOX -->
   <div id="lightbox" onclick="if(event.target===this)window.closeLightbox()">
     <button class="absolute top-4 right-4 text-white text-3xl" onclick="window.closeLightbox()">&times;</button>
     <img id="lightboxImg" src="" alt="">
   </div>
 
-  <!-- CART MODAL -->
   <div id="cartModal" class="modal-overlay"><div class="modal-box bg-white p-6 shadow-2xl">
     <div class="flex justify-between items-center mb-6">
-      <h3 class="font-display text-xl font-bold" style="color:var(--fg);"><i class="fas fa-shopping-bag mr-2" style="color:var(--accent);"></i>Mi Carrito</h3>
+      <h3 class="font-display text-xl font-bold"><i class="fas fa-shopping-bag mr-2" style="color:var(--accent);"></i>Mi Carrito</h3>
       <button type="button" onclick="window.closeAllModals()" class="text-drift text-xl w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center"><i class="fas fa-times"></i></button>
     </div>
     <div id="cartItems" class="space-y-4 mb-6"></div>
@@ -215,11 +146,10 @@
     </div>
   </div></div>
 
-  <!-- LOGIN MODAL -->
   <div id="loginModal" class="modal-overlay"><div class="modal-box bg-white p-8 shadow-2xl">
     <div class="text-center mb-6">
       <div class="w-16 h-16 rounded-2xl mx-auto mb-3 flex items-center justify-center btn-accent"><i class="fas fa-lock text-white text-2xl"></i></div>
-      <h3 class="font-display text-xl font-bold" style="color:var(--fg);">Acceso Admin</h3>
+      <h3 class="font-display text-xl font-bold">Acceso Admin</h3>
     </div>
     <div class="space-y-4">
       <input id="loginUser" type="email" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border); background:#FAFAF8;" placeholder="Email">
@@ -230,7 +160,6 @@
     </div>
   </div></div>
 
-  <!-- ADMIN MODAL -->
   <div id="adminModal" class="modal-overlay"><div class="modal-box bg-admin text-white flex flex-col shadow-2xl" style="height:100vh; max-height:100vh; border-radius:0;">
     <header class="p-4 border-b border-gray-700 flex justify-between items-center shrink-0">
       <h2 class="font-display text-lg font-bold" style="color:#D94F30;"><i class="fas fa-cog mr-2"></i>Admin</h2>
@@ -262,7 +191,7 @@
       sections: [], shippingZones: [], featuredProducts: [],
       storeName: 'La Tiendita Mix', heroSubtitle: 'De todo un poquito por ti',
       backgroundColor: '#FDFBF7', headerColor: '#1A1A1A', accentColor: '#D94F30',
-      exchangeRate: 300, whatsappNumber: ''
+      exchangeRate: 300, whatsappNumber: '', adminEmail: ''
     };
     let isLoggedIn = false, currentAdminPage = 'dashboard', activeSectionTab = -1;
     let adminSelectedSection = 0, cart = [];
@@ -279,6 +208,7 @@
       if (!storeData.backgroundColor) storeData.backgroundColor = '#FDFBF7';
       if (!storeData.headerColor) storeData.headerColor = '#1A1A1A';
       if (!storeData.accentColor) storeData.accentColor = '#D94F30';
+      if (!storeData.adminEmail) storeData.adminEmail = '';
       storeData.featuredProducts = storeData.featuredProducts.map(Number);
       storeData.sections.forEach(s => {
         if (!s.products) s.products = [];
@@ -311,7 +241,7 @@
       const ext = file.name.split('.').pop();
       const path = `productos/${Date.now()}_${Math.random().toString(36).substr(2,7)}.${ext}`;
       const { error } = await sb.storage.from('ecos_imagenes').upload(path, file, { cacheControl: '3600', upsert: false });
-      if (error) { showToast('Error subiendo imagen', 'error'); return null; }
+      if (error) { showToast('Error subiendo imagen', 'error'); console.error(error); return null; }
       const { data } = sb.storage.from('ecos_imagenes').getPublicUrl(path);
       return data.publicUrl;
     }
@@ -326,11 +256,31 @@
         i.style.color = isLoggedIn ? 'var(--accent)' : '';
       });
     }
+
     async function handleLogin() {
       if (!sb) return showToast('Error de conexión', 'error');
-      try { await sb.auth.signInWithPassword({ email: document.getElementById('loginUser').value, password: document.getElementById('loginPass').value }); closeAllModals(); openAdminPanel('dashboard'); }
-      catch(e) { document.getElementById('loginError').classList.remove('hidden'); }
+      const email = document.getElementById('loginUser').value.trim();
+      const password = document.getElementById('loginPass').value;
+      const adminEmail = (storeData.adminEmail || '').trim().toLowerCase();
+      if (!adminEmail) {
+        document.getElementById('loginError').textContent = 'No hay email admin configurado. Ve a Config y configúralo.';
+        document.getElementById('loginError').classList.remove('hidden');
+        return;
+      }
+      if (email.toLowerCase() !== adminEmail) {
+        document.getElementById('loginError').textContent = 'Acceso no autorizado.';
+        document.getElementById('loginError').classList.remove('hidden');
+        return;
+      }
+      try {
+        await sb.auth.signInWithPassword({ email, password });
+        closeAllModals(); openAdminPanel('dashboard');
+      } catch (e) {
+        document.getElementById('loginError').textContent = 'Contraseña incorrecta.';
+        document.getElementById('loginError').classList.remove('hidden');
+      }
     }
+
     async function handleLogout() { if (sb) await sb.auth.signOut(); closeAllModals(); showToast('Sesión cerrada'); }
 
     /* ==================== ASPECTO ==================== */
@@ -517,19 +467,20 @@
           <div class="bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-[10px] mb-1">DESTACADOS</p><p class="text-2xl font-bold" style="color:#FBBF24;">${feat}</p></div>
           <div class="bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-[10px] mb-1">AGOTADOS</p><p class="text-2xl font-bold ${out ? 'text-red-400' : 'text-green-400'}">${out}</p></div>
         </div>
-        <div class="mt-4 bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-xs">Tasa: <span class="text-white font-bold">1 USD = <span style="color:#D94F30;">${Math.round(storeData.exchangeRate).toLocaleString()}</span> CUP</span></p></div>`;
+        <div class="mt-4 bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-xs">Tasa: <span class="text-white font-bold">1 USD = <span style="color:#D94F30;">${Math.round(storeData.exchangeRate).toLocaleString()}</span> CUP</span></p></div>
+        ${!storeData.adminEmail ? '<div class="mt-4 bg-yellow-900/20 border border-yellow-700/40 rounded-xl p-4"><p class="text-yellow-400 text-sm font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Configura tu email de admin en Config para proteger el acceso.</p></div>' : ''}`;
     }
 
     /* --- Admin Destacados --- */
     function renderAdminFeatured(el) {
       const fp = (storeData.featuredProducts || []).map(Number);
       const all = getAllProducts();
-      const featuredProds = all.filter(p => fp.includes(p.id));
-      const notFeatured = all.filter(p => !fp.includes(p.id));
-      let h = `<div class="mb-4"><p class="text-gray-400 text-xs mb-3">Marca productos como destacados. Aparecerán en la sección principal del catálogo.</p></div>`;
-      if (featuredProds.length) {
-        h += `<p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wider"><i class="fas fa-star mr-1" style="color:#FBBF24;"></i>Destacados (${featuredProds.length})</p><div class="space-y-2 mb-6">`;
-        featuredProds.forEach(p => {
+      const feat = all.filter(p => fp.includes(p.id));
+      const noFeat = all.filter(p => !fp.includes(p.id));
+      let h = `<p class="text-gray-400 text-xs mb-4">Toca la estrella para marcar o quitar productos destacados.</p>`;
+      if (feat.length) {
+        h += `<p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wider"><i class="fas fa-star mr-1" style="color:#FBBF24;"></i>Destacados (${feat.length})</p><div class="space-y-2 mb-6">`;
+        feat.forEach(p => {
           h += `<div class="bg-adminCard rounded-xl p-3 border border-yellow-900/30 flex items-center gap-3">
             <img src="${p.image_url || ''}" class="w-10 h-10 rounded-lg object-cover bg-gray-800">
             <div class="flex-grow min-w-0"><p class="text-sm font-bold truncate">${p.name}</p><p class="text-xs" style="color:#D94F30;">${fmtPrice(p.priceCUP)}</p></div>
@@ -538,9 +489,9 @@
         });
         h += `</div>`;
       }
-      if (notFeatured.length) {
-        h += `<p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wider">Otros productos (${notFeatured.length})</p><div class="space-y-2">`;
-        notFeatured.forEach(p => {
+      if (noFeat.length) {
+        h += `<p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wider">Otros productos (${noFeat.length})</p><div class="space-y-2">`;
+        noFeat.forEach(p => {
           h += `<div class="bg-adminCard rounded-xl p-3 border border-gray-700 flex items-center gap-3">
             <img src="${p.image_url || ''}" class="w-10 h-10 rounded-lg object-cover bg-gray-800">
             <div class="flex-grow min-w-0"><p class="text-sm font-bold truncate">${p.name}</p><p class="text-xs text-gray-400">${fmtPrice(p.priceCUP)}</p></div>
@@ -558,8 +509,8 @@
       const idx = fp.indexOf(Number(pId));
       if (idx >= 0) fp.splice(idx, 1); else fp.push(Number(pId));
       storeData.featuredProducts = fp;
-      try { await sb.from('store_settings').update({ featuredProducts: fp }).eq('id', 1); showToast(idx >= 0 ? 'Quitado de destacados' : 'Añadido a destacados', 'success'); await fetchStoreData(); }
-      catch(e) { showToast('Error', 'error'); }
+      try { await sb.from('store_settings').update({ "featuredProducts": fp }).eq('id', 1); showToast(idx >= 0 ? 'Quitado de destacados' : 'Añadido a destacados', 'success'); await fetchStoreData(); }
+      catch(e) { showToast('Error al guardar', 'error'); }
     };
 
     /* --- Secciones --- */
@@ -585,22 +536,25 @@
     window.saveSection = async function() {
       const name = document.getElementById('sf_name').value.trim(), icon = document.getElementById('sf_icon').value.trim() || 'fas fa-gift';
       if (!name) { showToast('Nombre obligatorio', 'error'); return; }
-      if (editingSectionId) await sb.from('sections').update({ name, icon }).eq('id', editingSectionId);
-      else await sb.from('sections').insert({ name, icon });
-      showToast('Sección guardada', 'success'); await fetchStoreData(); window.showAdminPage('sections');
+      try {
+        if (editingSectionId) await sb.from('sections').update({ name, icon }).eq('id', editingSectionId);
+        else await sb.from('sections').insert({ name, icon });
+        showToast('Sección guardada', 'success'); await fetchStoreData(); window.showAdminPage('sections');
+      } catch(e) { showToast('Error al guardar: ' + e.message, 'error'); }
     };
     window.deleteSection = async function(id) {
       if (!confirm('¿Eliminar sección y sus productos?')) return;
-      await sb.from('products').delete().eq('section_id', id);
-      await sb.from('sections').delete().eq('id', id);
-      // Limpiar destacados de esta sección
-      const secProds = storeData.sections.find(s => s.id === Number(id));
-      if (secProds) {
-        const pIds = secProds.products.map(p => p.id);
-        storeData.featuredProducts = storeData.featuredProducts.filter(id => !pIds.includes(id));
-        await sb.from('store_settings').update({ featuredProducts: storeData.featuredProducts }).eq('id', 1);
-      }
-      showToast('Eliminada', 'success'); await fetchStoreData(); window.showAdminPage('sections');
+      try {
+        const sec = storeData.sections.find(s => s.id === Number(id));
+        if (sec) {
+          const pIds = sec.products.map(p => p.id);
+          const newFp = storeData.featuredProducts.filter(fid => !pIds.includes(fid));
+          await sb.from('store_settings').update({ "featuredProducts": newFp }).eq('id', 1);
+        }
+        await sb.from('products').delete().eq('section_id', id);
+        await sb.from('sections').delete().eq('id', id);
+        showToast('Eliminada', 'success'); await fetchStoreData(); window.showAdminPage('sections');
+      } catch(e) { showToast('Error: ' + e.message, 'error'); }
     };
 
     /* --- Productos --- */
@@ -624,7 +578,7 @@
               <p class="text-[10px] mb-2 ${p.quantity > 0 ? 'text-green-400' : 'text-red-400'}"><i class="fas fa-boxes-stacked mr-1"></i>Stock: ${p.quantity}</p>
               <div class="flex gap-2">
                 <button type="button" onclick="window.renderProductForm(${sec.id}, ${p.id})" class="flex-1 py-1.5 rounded-lg bg-gray-700 text-[11px] font-bold hover:bg-gray-600 transition">Editar</button>
-                <button type="button" onclick="window.deleteProduct(${sec.id}, ${p.id})" class="flex-1 py-1.5 rounded-lg bg-red-900/30 text-red-400 text-[11px] font-bold hover:bg-red-900/50 transition">Eliminar</button>
+                <button type="button" onclick="window.deleteProduct(${p.id})" class="flex-1 py-1.5 rounded-lg bg-red-900/30 text-red-400 text-[11px] font-bold hover:bg-red-900/50 transition">Eliminar</button>
               </div>
             </div></div>`;
         });
@@ -662,20 +616,24 @@
       if (!name) { showToast('Nombre obligatorio', 'error'); return; }
       if (priceCUP <= 0) { showToast('Precio > 0', 'error'); return; }
       btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
-      let imgUrl = editingProductId ? (findProduct(editingProductId)?.image_url || '') : '';
-      if (file) { imgUrl = await uploadImage(file); if (!imgUrl) { btn.disabled = false; btn.innerHTML = 'Guardar Producto'; return; } }
-      if (!imgUrl) imgUrl = `https://picsum.photos/seed/${Date.now()}/400/400`;
-      const payload = { name, priceCUP, quantity, image_url: imgUrl, section_id: Number(editingProductSectionId) };
-      if (editingProductId) await sb.from('products').update(payload).eq('id', editingProductId);
-      else await sb.from('products').insert(payload);
-      showToast('Producto guardado', 'success'); await fetchStoreData(); window.showAdminPage('products');
+      try {
+        let imgUrl = editingProductId ? (findProduct(editingProductId)?.image_url || '') : '';
+        if (file) { imgUrl = await uploadImage(file); if (!imgUrl) { btn.disabled = false; btn.innerHTML = 'Guardar Producto'; return; } }
+        if (!imgUrl) imgUrl = `https://picsum.photos/seed/${Date.now()}/400/400`;
+        const payload = { name, "priceCUP": priceCUP, quantity, "image_url": imgUrl, "section_id": Number(editingProductSectionId) };
+        if (editingProductId) await sb.from('products').update(payload).eq('id', editingProductId);
+        else await sb.from('products').insert(payload);
+        showToast('Producto guardado', 'success'); await fetchStoreData(); window.showAdminPage('products');
+      } catch(e) { showToast('Error: ' + e.message, 'error'); btn.disabled = false; btn.innerHTML = 'Guardar Producto'; }
     };
-    window.deleteProduct = async function(secId, prodId) {
+    window.deleteProduct = async function(pId) {
       if (!confirm('¿Eliminar este producto?')) return;
-      await sb.from('products').delete().eq('id', prodId);
-      storeData.featuredProducts = storeData.featuredProducts.filter(id => id !== Number(prodId));
-      await sb.from('store_settings').update({ featuredProducts: storeData.featuredProducts }).eq('id', 1);
-      showToast('Eliminado', 'success'); await fetchStoreData(); renderProductList(document.getElementById('adminContent'));
+      try {
+        await sb.from('products').delete().eq('id', pId);
+        const newFp = storeData.featuredProducts.filter(id => id !== Number(pId));
+        await sb.from('store_settings').update({ "featuredProducts": newFp }).eq('id', 1);
+        showToast('Eliminado', 'success'); await fetchStoreData(); renderProductList(document.getElementById('adminContent'));
+      } catch(e) { showToast('Error: ' + e.message, 'error'); }
     };
 
     /* --- Aspecto --- */
@@ -703,13 +661,16 @@
         <button type="button" onclick="window.saveAppearance()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar Aspecto</button></div>`;
     }
     window.saveAppearance = async function() {
-      storeData.storeName = document.getElementById('ap_name').value.trim();
-      storeData.heroSubtitle = document.getElementById('ap_sub').value.trim();
-      storeData.backgroundColor = document.getElementById('ap_bg').value;
-      storeData.headerColor = document.getElementById('ap_fg').value;
-      storeData.accentColor = document.getElementById('ap_ac').value;
-      try { await sb.from('store_settings').update({ storeName: storeData.storeName, heroSubtitle: storeData.heroSubtitle, backgroundColor: storeData.backgroundColor, headerColor: storeData.headerColor, accentColor: storeData.accentColor }).eq('id', 1); showToast('Aspecto actualizado', 'success'); await fetchStoreData(); }
-      catch(e) { showToast('Error', 'error'); }
+      try {
+        await sb.from('store_settings').update({
+          "storeName": document.getElementById('ap_name').value.trim(),
+          "heroSubtitle": document.getElementById('ap_sub').value.trim(),
+          "backgroundColor": document.getElementById('ap_bg').value,
+          "headerColor": document.getElementById('ap_fg').value,
+          "accentColor": document.getElementById('ap_ac').value
+        }).eq('id', 1);
+        showToast('Aspecto actualizado', 'success'); await fetchStoreData();
+      } catch(e) { showToast('Error: ' + e.message, 'error'); }
     };
 
     /* --- Config --- */
@@ -719,6 +680,10 @@
         zH += `<div class="flex items-center gap-3 bg-gray-800 p-3 rounded-lg border border-gray-700"><i class="fas fa-map-marker-alt text-gray-600"></i><span class="flex-1 text-sm">${z.name}</span><span class="font-bold text-sm" style="color:#D94F30;">${Math.round(z.cost).toLocaleString()} CUP</span><button type="button" onclick="window.removeZone(${i})" class="text-red-400 text-xs hover:text-red-300"><i class="fas fa-trash"></i></button></div>`;
       });
       el.innerHTML = `<div class="space-y-4">
+        <div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4">
+          <h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fas fa-shield-halved mr-2"></i>Seguridad</h3>
+          <div><label class="block text-xs text-gray-400 mb-1">Email del administrador</label><input id="st_admin" type="email" value="${storeData.adminEmail || ''}" class="admin-input" placeholder="admin@tienda.com"><p class="text-[10px] text-gray-500 mt-1">Solo este email podrá acceder al panel admin.</p></div>
+        </div>
         <div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4">
           <h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fab fa-whatsapp mr-2"></i>Ventas</h3>
           <div><label class="block text-xs text-gray-400 mb-1">WhatsApp (solo números, con país)</label><input id="st_wa" type="text" value="${storeData.whatsappNumber || ''}" class="admin-input" placeholder="5355555555"></div>
@@ -736,16 +701,24 @@
       const n = document.getElementById('sz_n').value.trim(), c = Number(document.getElementById('sz_c').value) || 0;
       if (!n) { showToast('Escribe el municipio', 'error'); return; }
       storeData.shippingZones.push({ name: n, cost: c });
-      try { await sb.from('store_settings').update({ shippingZones: storeData.shippingZones }).eq('id', 1); showToast('Municipio añadido', 'success'); await fetchStoreData(); renderSettings(document.getElementById('adminContent')); } catch(e) {}
+      try { await sb.from('store_settings').update({ "shippingZones": storeData.shippingZones }).eq('id', 1); showToast('Municipio añadido', 'success'); await fetchStoreData(); renderSettings(document.getElementById('adminContent')); } catch(e) { showToast('Error', 'error'); }
     };
     window.removeZone = async function(i) {
       storeData.shippingZones.splice(i, 1);
-      try { await sb.from('store_settings').update({ shippingZones: storeData.shippingZones }).eq('id', 1); showToast('Eliminado', 'success'); await fetchStoreData(); renderSettings(document.getElementById('adminContent')); } catch(e) {}
+      try { await sb.from('store_settings').update({ "shippingZones": storeData.shippingZones }).eq('id', 1); showToast('Eliminado', 'success'); await fetchStoreData(); renderSettings(document.getElementById('adminContent')); } catch(e) {}
     };
     window.saveSettings = async function() {
-      storeData.whatsappNumber = document.getElementById('st_wa').value.trim();
-      storeData.exchangeRate = Number(document.getElementById('st_ex').value) || 300;
-      try { await sb.from('store_settings').update({ whatsappNumber: storeData.whatsappNumber, exchangeRate: storeData.exchangeRate }).eq('id', 1); showToast('Configuración guardada', 'success'); await fetchStoreData(); } catch(e) {}
+      try {
+        storeData.adminEmail = document.getElementById('st_admin').value.trim();
+        storeData.whatsappNumber = document.getElementById('st_wa').value.trim();
+        storeData.exchangeRate = Number(document.getElementById('st_ex').value) || 300;
+        await sb.from('store_settings').update({
+          "adminEmail": storeData.adminEmail,
+          "whatsappNumber": storeData.whatsappNumber,
+          "exchangeRate": storeData.exchangeRate
+        }).eq('id', 1);
+        showToast('Configuración guardada', 'success'); await fetchStoreData();
+      } catch(e) { showToast('Error: ' + e.message, 'error'); }
     };
 
     /* ==================== INIT ==================== */
@@ -763,4 +736,4 @@
     });
   </script>
 </body>
-        </html>
+  </html>
