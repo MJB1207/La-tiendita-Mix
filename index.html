@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>La Tiendita Mix — De todo un poquito por ti</title>
+  <title>La Tiendita Mix</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -11,11 +11,11 @@
       theme: {
         extend: {
           colors: {
-            blush: '#FDFBF7', charcoal: '#1A1A1A', terracotta: '#D94F30',
-            deepTerracotta: '#B83A20', warmWhite: '#FFF9F5', sand: '#FEF0EC',
-            drift: '#7A7068', forest: '#16A34A', admin: '#111827', adminCard: '#1F2937'
+            blush:'#FDFBF7',charcoal:'#1A1A1A',terracotta:'#D94F30',
+            deepTerracotta:'#B83A20',sand:'#FEF0EC',drift:'#7A7068',
+            forest:'#16A34A',admin:'#111827',adminCard:'#1F2937'
           },
-          fontFamily: { display: ['Playfair Display', 'serif'], body: ['Lato', 'sans-serif'] }
+          fontFamily:{display:['Playfair Display','serif'],body:['Lato','sans-serif']}
         }
       }
     }
@@ -23,60 +23,60 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    :root { --bg: #FDFBF7; --fg: #1A1A1A; --accent: #D94F30; --accent-dark: #B83A20; --accent-light: #FEF0EC; --border: #EDE8E2; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--fg); overflow-x: hidden; max-width: 100vw; }
-    .font-display { font-family: 'Playfair Display', serif; }
-    .hero-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(170deg, #FDFBF7 0%, #FEF0EC 45%, #FDE8DF 100%); position: relative; overflow: hidden; }
-    .hero-dots { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(circle at 2px 2px, rgba(217,79,48,0.05) 1px, transparent 0); background-size: 28px 28px; }
-    .hero-glow { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(217,79,48,0.08) 0%, transparent 70%); top: 10%; right: -100px; pointer-events: none; }
-    .hero-glow-2 { position: absolute; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(217,79,48,0.06) 0%, transparent 70%); bottom: 10%; left: -80px; pointer-events: none; }
-    .hero-logo-wrap { width: 280px; height: 280px; border-radius: 50%; overflow: hidden; box-shadow: 0 20px 60px rgba(217,79,48,0.18), 0 0 0 6px rgba(217,79,48,0.08); margin: 0 auto 2rem; transition: transform 0.5s; background: white; }
-    .hero-logo-wrap:hover { transform: scale(1.03); }
-    .hero-logo-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .featured-scroll { display: flex; gap: 14px; overflow-x: auto; padding: 4px 0 16px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-    .featured-scroll::-webkit-scrollbar { display: none; }
-    .featured-card { min-width: 165px; max-width: 165px; scroll-snap-align: start; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid var(--border); transition: transform 0.2s; flex-shrink: 0; }
-    .featured-card:active { transform: scale(0.97); }
-    .product-card { border-radius: 18px; overflow: hidden; background: #fff; border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: transform 0.2s; display: flex; flex-direction: column; }
-    .product-card:active { transform: scale(0.97); }
-    .tab-btn { transition: all 0.3s; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; padding: 10px 16px; font-size: 14px; color: var(--fg); opacity: 0.6; }
-    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; opacity: 1; }
-    .tabs-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-    .tabs-scroll::-webkit-scrollbar { display: none; }
-    .modal-overlay { position: fixed; inset: 0; z-index: 1100; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-    .modal-overlay.visible { opacity: 1; pointer-events: all; }
-    .modal-box { transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); width: 100%; max-height: 95vh; overflow-y: auto; border-radius: 24px 24px 0 0; }
-    .modal-overlay.visible .modal-box { transform: translateY(0); }
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(253,251,247,0.95); backdrop-filter: blur(14px); border-top: 1px solid var(--border); z-index: 900; padding-bottom: env(safe-area-inset-bottom, 0px); display: flex; }
-    .bottom-nav button { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: #7A7068; transition: color 0.2s; padding: 10px 0; background: none; border: none; cursor: pointer; flex: 1; }
-    .bottom-nav button.active { color: var(--accent); font-weight: 700; }
-    .bottom-nav button i { font-size: 20px; }
-    .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-120%); background: #1A1A1A; color: #fff; padding: 12px 24px; border-radius: 50px; font-size: 14px; z-index: 2000; transition: transform 0.4s; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-    .toast.success { background: #16A34A; }
-    .toast.error { background: #DC2626; }
-    .badge-cart { position: absolute; top: -4px; right: 8px; background: var(--accent); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-    .admin-scroll::-webkit-scrollbar { width: 4px; }
-    .admin-scroll::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 2px; }
-    .admin-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #374151; font-size: 15px; font-family: 'Lato', sans-serif; background: #1F2937; color: #f9fafb; }
-    .admin-input:focus { outline: none; border-color: #D94F30; }
-    .star-btn { transition: transform 0.2s, color 0.2s; }
-    .star-btn:hover { transform: scale(1.2); }
-    .star-btn.active { color: #FBBF24; animation: starPop 0.3s; }
-    @keyframes starPop { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
-    .btn-accent { background: linear-gradient(135deg, #D94F30, #B83A20); color: white; box-shadow: 0 4px 16px rgba(217,79,48,0.25); transition: all 0.2s; }
-    .btn-accent:hover { box-shadow: 0 6px 24px rgba(217,79,48,0.35); }
-    .btn-accent:active { transform: scale(0.97); }
-    .btn-accent-sm { background: linear-gradient(135deg, #D94F30, #B83A20); color: white; box-shadow: 0 2px 8px rgba(217,79,48,0.2); }
-    .btn-accent-sm:active { transform: scale(0.95); }
-    #lightbox { position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
-    #lightbox.active { display: flex; }
-    #lightbox img { max-width: 95vw; max-height: 90vh; object-fit: contain; border-radius: 8px; }
-    .divider-line { width: 40px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, #D94F30, #B83A20); }
-    .shipping-note { background: var(--accent-light); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; display: flex; align-items: flex-start; gap: 10px; }
-    .shipping-note i { color: var(--accent); margin-top: 2px; }
+    :root{--bg:#FDFBF7;--fg:#1A1A1A;--accent:#D94F30;--accent-dark:#B83A20;--accent-light:#FEF0EC;--border:#EDE8E2}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Lato',sans-serif;background:var(--bg);color:var(--fg);overflow-x:hidden;max-width:100vw}
+    .font-display{font-family:'Playfair Display',serif}
+    .hero-section{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(170deg,#FDFBF7 0%,#FEF0EC 45%,#FDE8DF 100%);position:relative;overflow:hidden}
+    .hero-dots{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle at 2px 2px,rgba(217,79,48,0.05) 1px,transparent 0);background-size:28px 28px}
+    .hero-glow{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(217,79,48,0.08) 0%,transparent 70%);top:10%;right:-100px;pointer-events:none}
+    .hero-glow-2{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(217,79,48,0.06) 0%,transparent 70%);bottom:10%;left:-80px;pointer-events:none}
+    .hero-logo-wrap{width:280px;height:280px;border-radius:50%;overflow:hidden;box-shadow:0 20px 60px rgba(217,79,48,0.18),0 0 0 6px rgba(217,79,48,0.08);margin:0 auto 2rem;transition:transform .5s;background:#fff}
+    .hero-logo-wrap:hover{transform:scale(1.03)}
+    .hero-logo-wrap img{width:100%;height:100%;object-fit:cover}
+    .featured-scroll{display:flex;gap:14px;overflow-x:auto;padding:4px 0 16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .featured-scroll::-webkit-scrollbar{display:none}
+    .featured-card{min-width:165px;max-width:165px;scroll-snap-align:start;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06);border:1px solid var(--border);transition:transform .2s;flex-shrink:0}
+    .featured-card:active{transform:scale(0.97)}
+    .product-card{border-radius:18px;overflow:hidden;background:#fff;border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,0.04);transition:transform .2s;display:flex;flex-direction:column}
+    .product-card:active{transform:scale(0.97)}
+    .tab-btn{transition:all .3s;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;padding:10px 16px;font-size:14px;color:var(--fg);opacity:.6}
+    .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700;opacity:1}
+    .tabs-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .tabs-scroll::-webkit-scrollbar{display:none}
+    .modal-overlay{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+    .modal-overlay.visible{opacity:1;pointer-events:all}
+    .modal-box{transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);width:100%;max-height:95vh;overflow-y:auto;border-radius:24px 24px 0 0}
+    .modal-overlay.visible .modal-box{transform:translateY(0)}
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(253,251,247,0.95);backdrop-filter:blur(14px);border-top:1px solid var(--border);z-index:900;padding-bottom:env(safe-area-inset-bottom,0px);display:flex}
+    .bottom-nav button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:#7A7068;transition:color .2s;padding:10px 0;background:none;border:none;cursor:pointer;flex:1}
+    .bottom-nav button.active{color:var(--accent);font-weight:700}
+    .bottom-nav button i{font-size:20px}
+    .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-120%);background:#1A1A1A;color:#fff;padding:12px 24px;border-radius:50px;font-size:14px;z-index:2000;transition:transform .4s;box-shadow:0 8px 30px rgba(0,0,0,0.2)}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.success{background:#16A34A}
+    .toast.error{background:#DC2626}
+    .badge-cart{position:absolute;top:-4px;right:8px;background:var(--accent);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:bold}
+    .admin-scroll::-webkit-scrollbar{width:4px}
+    .admin-scroll::-webkit-scrollbar-thumb{background:#4B5563;border-radius:2px}
+    .admin-input{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid #374151;font-size:15px;font-family:'Lato',sans-serif;background:#1F2937;color:#f9fafb}
+    .admin-input:focus{outline:none;border-color:#D94F30}
+    .star-btn{transition:transform .2s,color .2s}
+    .star-btn:hover{transform:scale(1.2)}
+    .star-btn.active{color:#FBBF24;animation:starPop .3s}
+    @keyframes starPop{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+    .btn-accent{background:linear-gradient(135deg,#D94F30,#B83A20);color:#fff;box-shadow:0 4px 16px rgba(217,79,48,0.25);transition:all .2s}
+    .btn-accent:hover{box-shadow:0 6px 24px rgba(217,79,48,0.35)}
+    .btn-accent:active{transform:scale(0.97)}
+    .btn-accent-sm{background:linear-gradient(135deg,#D94F30,#B83A20);color:#fff;box-shadow:0 2px 8px rgba(217,79,48,0.2)}
+    .btn-accent-sm:active{transform:scale(0.95)}
+    #lightbox{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;cursor:zoom-out}
+    #lightbox.active{display:flex}
+    #lightbox img{max-width:95vw;max-height:90vh;object-fit:contain;border-radius:8px}
+    .divider-line{width:40px;height:3px;border-radius:2px;background:linear-gradient(90deg,#D94F30,#B83A20)}
+    .shipping-note{background:var(--accent-light);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:flex-start;gap:10px}
+    .shipping-note i{color:var(--accent);margin-top:2px}
   </style>
 </head>
 <body>
@@ -89,88 +89,63 @@
 
   <main id="screenCatalog" class="pb-24">
     <section class="hero-section">
-      <div class="hero-dots"></div>
-      <div class="hero-glow"></div>
-      <div class="hero-glow-2"></div>
+      <div class="hero-dots"></div><div class="hero-glow"></div><div class="hero-glow-2"></div>
       <div class="relative z-10 text-center px-6">
         <div class="hero-logo-wrap">
           <img src="https://raw.githubusercontent.com/MJB1207/La-tiendita-Mix/5d4b412bb819a2402fac4052b42449c65f118f71/IMG-20260814-WA0012.jpg" alt="La Tiendita Mix">
         </div>
-        <p id="heroSubtitle" class="uppercase tracking-[0.25em] text-xs mb-8 font-bold" style="color:var(--accent);">De todo un poquito por ti</p>
+        <p id="heroSubtitle" class="uppercase tracking-[0.25em] text-xs mb-8 font-bold" style="color:var(--accent)">De todo un poquito por ti</p>
         <a href="#featuredSection" class="btn-accent inline-block px-8 py-4 rounded-full font-bold text-base"><i class="fas fa-bag-shopping mr-2"></i>Ver Catálogo</a>
       </div>
     </section>
 
     <section id="featuredSection" class="py-10 px-4 hidden">
       <div class="max-w-lg mx-auto">
-        <div class="flex items-center gap-3 mb-5">
-          <i class="fas fa-star text-lg" style="color:#FBBF24;"></i>
-          <h2 class="font-display text-2xl font-bold">Destacados</h2>
-        </div>
+        <div class="flex items-center gap-3 mb-5"><i class="fas fa-star text-lg" style="color:#FBBF24"></i><h2 class="font-display text-2xl font-bold">Destacados</h2></div>
         <div id="featuredScroll" class="featured-scroll"></div>
       </div>
     </section>
 
     <section id="catalogSection" class="py-10 px-4">
       <div class="max-w-lg mx-auto">
-        <div class="text-center mb-6">
-          <div class="divider-line mx-auto mb-3"></div>
-          <h2 class="font-display text-2xl font-bold">Nuestro Catálogo</h2>
-          <p class="text-drift text-sm mt-1">Encuentra lo que buscas</p>
-        </div>
-        <div id="sectionTabs" class="tabs-scroll flex gap-1 mb-6 border-b" style="border-color:var(--border);"></div>
+        <div class="text-center mb-6"><div class="divider-line mx-auto mb-3"></div><h2 class="font-display text-2xl font-bold">Nuestro Catálogo</h2></div>
+        <div id="sectionTabs" class="tabs-scroll flex gap-1 mb-6 border-b" style="border-color:var(--border)"></div>
         <div id="productGrid" class="grid grid-cols-2 gap-3"></div>
       </div>
     </section>
   </main>
 
-  <div id="lightbox" onclick="if(event.target===this)window.closeLightbox()">
-    <button class="absolute top-4 right-4 text-white text-3xl" onclick="window.closeLightbox()">&times;</button>
-    <img id="lightboxImg" src="" alt="">
-  </div>
+  <div id="lightbox" onclick="if(event.target===this)window.closeLightbox()"><button class="absolute top-4 right-4 text-white text-3xl" onclick="window.closeLightbox()">&times;</button><img id="lightboxImg" src="" alt=""></div>
 
   <div id="cartModal" class="modal-overlay"><div class="modal-box bg-white p-6 shadow-2xl">
-    <div class="flex justify-between items-center mb-6">
-      <h3 class="font-display text-xl font-bold"><i class="fas fa-shopping-bag mr-2" style="color:var(--accent);"></i>Mi Carrito</h3>
-      <button type="button" onclick="window.closeAllModals()" class="text-drift text-xl w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center"><i class="fas fa-times"></i></button>
-    </div>
+    <div class="flex justify-between items-center mb-6"><h3 class="font-display text-xl font-bold"><i class="fas fa-shopping-bag mr-2" style="color:var(--accent)"></i>Mi Carrito</h3><button type="button" onclick="window.closeAllModals()" class="text-drift text-xl w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center"><i class="fas fa-times"></i></button></div>
     <div id="cartItems" class="space-y-4 mb-6"></div>
-    <div id="checkoutForm" class="space-y-3 border-t pt-4 hidden" style="border-color:var(--border);">
-      <h4 class="font-bold text-base"><i class="fas fa-truck mr-2" style="color:var(--accent);"></i>Datos de Envío</h4>
-      <input type="text" id="checkName" placeholder="Tu nombre completo" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border); background:#FAFAF8;">
-      <input type="tel" id="checkPhone" placeholder="Número de teléfono" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border); background:#FAFAF8;">
-      <input type="text" id="checkAddress" placeholder="Dirección completa (calle, número, municipio...)" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border); background:#FAFAF8;">
-      <select id="checkPayment" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border); background:#FAFAF8;"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select>
-      <textarea id="checkNotes" rows="2" placeholder="Notas adicionales (opcional)" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border); background:#FAFAF8; resize:none;"></textarea>
-      <div class="shipping-note">
-        <i class="fas fa-info-circle text-sm"></i>
-        <p class="text-xs text-drift leading-relaxed">El costo de <strong>mensajería varía según la ubicación</strong> y se confirma por WhatsApp al procesar tu pedido.</p>
-      </div>
+    <div id="checkoutForm" class="space-y-3 border-t pt-4 hidden" style="border-color:var(--border)">
+      <h4 class="font-bold text-base"><i class="fas fa-truck mr-2" style="color:var(--accent)"></i>Datos de Envío</h4>
+      <input type="text" id="checkName" placeholder="Nombre completo" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border);background:#FAFAF8">
+      <input type="tel" id="checkPhone" placeholder="Teléfono" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border);background:#FAFAF8">
+      <input type="text" id="checkAddress" placeholder="Dirección completa" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border);background:#FAFAF8">
+      <select id="checkPayment" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border);background:#FAFAF8"><option value="Efectivo">Efectivo</option><option value="Transferencia">Transferencia</option></select>
+      <textarea id="checkNotes" rows="2" placeholder="Notas (opcional)" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border);background:#FAFAF8;resize:none"></textarea>
+      <div class="shipping-note"><i class="fas fa-info-circle text-sm"></i><p class="text-xs text-drift leading-relaxed">El costo de <strong>mensajería varía según la ubicación</strong> y se confirma por WhatsApp.</p></div>
       <div id="cartTotalSummary" class="text-right pt-1"></div>
-      <button type="button" id="sendWhatsapp" class="w-full py-3.5 rounded-xl font-bold text-white text-base flex items-center justify-center gap-2 transition active:scale-95" style="background:#16A34A; box-shadow:0 4px 16px rgba(22,163,74,0.3);"><i class="fab fa-whatsapp text-xl"></i>Enviar Pedido por WhatsApp</button>
+      <button type="button" id="sendWhatsapp" class="w-full py-3.5 rounded-xl font-bold text-white text-base flex items-center justify-center gap-2 transition active:scale-95" style="background:#16A34A;box-shadow:0 4px 16px rgba(22,163,74,0.3)"><i class="fab fa-whatsapp text-xl"></i>Enviar Pedido</button>
     </div>
   </div></div>
 
   <div id="loginModal" class="modal-overlay"><div class="modal-box bg-white p-8 shadow-2xl">
-    <div class="text-center mb-6">
-      <div class="w-16 h-16 rounded-2xl mx-auto mb-3 flex items-center justify-center btn-accent"><i class="fas fa-lock text-white text-2xl"></i></div>
-      <h3 class="font-display text-xl font-bold">Acceso Admin</h3>
-      <p class="text-drift text-xs mt-1">Email y contraseña requeridos</p>
-    </div>
+    <div class="text-center mb-6"><div class="w-16 h-16 rounded-2xl mx-auto mb-3 flex items-center justify-center btn-accent"><i class="fas fa-lock text-white text-2xl"></i></div><h3 class="font-display text-xl font-bold">Acceso Admin</h3></div>
     <div class="space-y-4">
-      <input id="loginUser" type="email" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border); background:#FAFAF8;" placeholder="Email autorizado">
-      <input id="loginPass" type="password" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border); background:#FAFAF8;" placeholder="Contraseña">
-      <p id="loginError" class="text-red-500 text-sm hidden">Credenciales incorrectas.</p>
+      <input id="loginUser" type="email" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border);background:#FAFAF8" placeholder="Email">
+      <input id="loginPass" type="password" class="w-full p-3 rounded-xl border text-sm" style="border-color:var(--border);background:#FAFAF8" placeholder="Contraseña">
+      <p id="loginError" class="text-red-500 text-sm hidden"></p>
       <button type="button" id="loginBtn" class="w-full py-3 rounded-xl font-bold text-white text-base btn-accent">Iniciar Sesión</button>
-      <button type="button" onclick="window.closeAllModals()" class="w-full py-3 rounded-xl font-bold text-drift border text-base" style="border-color:var(--border);">Cancelar</button>
+      <button type="button" onclick="window.closeAllModals()" class="w-full py-3 rounded-xl font-bold text-drift border text-base" style="border-color:var(--border)">Cancelar</button>
     </div>
   </div></div>
 
-  <div id="adminModal" class="modal-overlay"><div class="modal-box bg-admin text-white flex flex-col shadow-2xl" style="height:100vh; max-height:100vh; border-radius:0;">
-    <header class="p-4 border-b border-gray-700 flex justify-between items-center shrink-0">
-      <h2 class="font-display text-lg font-bold" style="color:#D94F30;"><i class="fas fa-cog mr-2"></i>Admin</h2>
-      <button type="button" onclick="window.closeAllModals()" class="w-10 h-10 rounded-full hover:bg-gray-800 flex items-center justify-center"><i class="fas fa-times text-xl"></i></button>
-    </header>
+  <div id="adminModal" class="modal-overlay"><div class="modal-box bg-admin text-white flex flex-col shadow-2xl" style="height:100vh;max-height:100vh;border-radius:0">
+    <header class="p-4 border-b border-gray-700 flex justify-between items-center shrink-0"><h2 class="font-display text-lg font-bold" style="color:#D94F30"><i class="fas fa-cog mr-2"></i>Admin</h2><button type="button" onclick="window.closeAllModals()" class="w-10 h-10 rounded-full hover:bg-gray-800 flex items-center justify-center"><i class="fas fa-times text-xl"></i></button></header>
     <div class="flex gap-1 p-3 border-b border-gray-700 shrink-0 bg-adminCard/50 overflow-x-auto tabs-scroll">
       <button type="button" onclick="window.showAdminPage('dashboard')" class="admin-tab px-3 py-2 rounded-lg text-xs font-bold text-gray-400 shrink-0" data-page="dashboard"><i class="fas fa-chart-bar mr-1"></i>Inicio</button>
       <button type="button" onclick="window.showAdminPage('featured')" class="admin-tab px-3 py-2 rounded-lg text-xs font-bold text-gray-400 shrink-0" data-page="featured"><i class="fas fa-star mr-1"></i>Destacados</button>
@@ -186,477 +161,218 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    const SUPABASE_URL = 'https://hqijdiyidouvofdjafhl.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_5F3Cpg8wwY8kiqqeSJdFIQ_HvKEx6X3';
-    let sb;
-    try { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) { console.error(e); }
+    const SUPABASE_URL='https://hqijdiyidouvofdjafhl.supabase.co';
+    const SUPABASE_ANON_KEY='sb_publishable_5F3Cpg8wwY8kiqqeSJdFIQ_HvKEx6X3';
+    let sb;try{sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY)}catch(e){console.error(e)}
 
-    let storeData = {
-      sections: [], featuredProducts: [], adminEmails: [],
-      storeName: 'La Tiendita Mix', heroSubtitle: 'De todo un poquito por ti',
-      backgroundColor: '#FDFBF7', headerColor: '#1A1A1A', accentColor: '#D94F30',
-      exchangeRate: 300, whatsappNumber: ''
-    };
-    let isLoggedIn = false, currentAdminPage = 'dashboard', activeSectionTab = -1;
-    let adminSelectedSection = 0, cart = [];
-    let editingSectionId = null, editingProductId = null, editingProductSectionId = null;
+    let storeData={sections:[],featuredProducts:[],adminEmails:[],storeName:'La Tiendita Mix',heroSubtitle:'De todo un poquito por ti',backgroundColor:'#FDFBF7',headerColor:'#1A1A1A',accentColor:'#D94F30',exchangeRate:300,whatsappNumber:''};
+    let isLoggedIn=false,currentAdminPage='dashboard',activeSectionTab=-1,adminSelectedSection=0,cart=[];
+    let editingSectionId=null,editingProductId=null,editingProductSectionId=null;
 
-    function parseJSON(v) { return v ? (typeof v === 'string' ? JSON.parse(v) : v) : []; }
-
-    function sanitizeData() {
-      if (!storeData.sections) storeData.sections = [];
-      if (!storeData.featuredProducts) storeData.featuredProducts = [];
-      if (!storeData.adminEmails) storeData.adminEmails = [];
-      storeData.exchangeRate = Number(storeData.exchangeRate) || 300;
-      if (!storeData.storeName) storeData.storeName = 'La Tiendita Mix';
-      if (!storeData.heroSubtitle) storeData.heroSubtitle = 'De todo un poquito por ti';
-      if (!storeData.backgroundColor) storeData.backgroundColor = '#FDFBF7';
-      if (!storeData.headerColor) storeData.headerColor = '#1A1A1A';
-      if (!storeData.accentColor) storeData.accentColor = '#D94F30';
-      storeData.featuredProducts = storeData.featuredProducts.map(Number);
-      storeData.adminEmails = storeData.adminEmails.map(e => String(e).toLowerCase().trim()).filter(e => e);
-      if (storeData.adminEmail && !storeData.adminEmails.includes(String(storeData.adminEmail).toLowerCase().trim())) {
-        storeData.adminEmails.push(String(storeData.adminEmail).toLowerCase().trim());
-      }
-      storeData.sections.forEach(s => {
-        if (!s.products) s.products = [];
-        s.id = Number(s.id);
-        s.products.forEach(p => { p.id = Number(p.id); p.priceCUP = Number(p.priceCUP) || 0; p.quantity = Number(p.quantity) || 0; });
-      });
+    function parseJSON(v){return v?(typeof v==='string'?JSON.parse(v):v):[]}
+    function sanitizeData(){
+      if(!storeData.sections)storeData.sections=[];
+      if(!storeData.featuredProducts)storeData.featuredProducts=[];
+      if(!storeData.adminEmails)storeData.adminEmails=[];
+      storeData.exchangeRate=Number(storeData.exchangeRate)||300;
+      if(!storeData.storeName)storeData.storeName='La Tiendita Mix';
+      if(!storeData.heroSubtitle)storeData.heroSubtitle='De todo un poquito por ti';
+      if(!storeData.backgroundColor)storeData.backgroundColor='#FDFBF7';
+      if(!storeData.headerColor)storeData.headerColor='#1A1A1A';
+      if(!storeData.accentColor)storeData.accentColor='#D94F30';
+      storeData.featuredProducts=storeData.featuredProducts.map(Number);
+      storeData.adminEmails=storeData.adminEmails.map(e=>String(e).toLowerCase().trim()).filter(e=>e);
+      if(storeData.adminEmail&&!storeData.adminEmails.includes(String(storeData.adminEmail).toLowerCase().trim()))storeData.adminEmails.push(String(storeData.adminEmail).toLowerCase().trim());
+      storeData.sections.forEach(s=>{if(!s.products)s.products=[];s.id=Number(s.id);s.products.forEach(p=>{p.id=Number(p.id);p.priceCUP=Number(p.priceCUP)||0;p.quantity=Number(p.quantity)||0})});
     }
 
-    async function fetchStoreData() {
-      if (!sb) return;
-      try {
-        const { data: settings } = await sb.from('store_settings').select('*').eq('id', 1).single();
-        if (settings) {
-          storeData = { ...storeData, ...settings };
-          storeData.featuredProducts = parseJSON(settings.featuredProducts);
-          storeData.adminEmails = parseJSON(settings.adminEmails);
-        }
-        const { data: secs } = await sb.from('sections').select('*').order('id', { ascending: true });
-        const { data: prods } = await sb.from('products').select('*');
-        storeData.sections = [];
-        if (secs) secs.forEach(s => { s.products = prods ? prods.filter(p => p.section_id === s.id) : []; storeData.sections.push(s); });
-      } catch(e) { console.error("Fetch error:", e); }
-      sanitizeData(); applyAppearance(); renderFeatured(); renderCatalog();
-      if (document.getElementById('adminModal').classList.contains('visible')) window.showAdminPage(currentAdminPage);
+    async function fetchStoreData(){
+      if(!sb)return;
+      try{
+        const{data:settings}=await sb.from('store_settings').select('*').eq('id',1).single();
+        if(settings){storeData={...storeData,...settings};storeData.featuredProducts=parseJSON(settings.featuredProducts);storeData.adminEmails=parseJSON(settings.adminEmails)}
+        const{data:secs}=await sb.from('sections').select('*').order('id',{ascending:true});
+        const{data:prods}=await sb.from('products').select('*');
+        storeData.sections=[];
+        if(secs)secs.forEach(s=>{s.products=prods?prods.filter(p=>p.section_id===s.id):[];storeData.sections.push(s)});
+      }catch(e){console.error("Fetch:",e)}
+      sanitizeData();applyAppearance();renderFeatured();renderCatalog();
+      if(document.getElementById('adminModal').classList.contains('visible'))window.showAdminPage(currentAdminPage);
     }
 
-    async function uploadImage(file) {
-      if (!file || !sb) return null;
-      const ext = file.name.split('.').pop();
-      const path = `productos/${Date.now()}_${Math.random().toString(36).substr(2,7)}.${ext}`;
-      const { error } = await sb.storage.from('ecos_imagenes').upload(path, file, { cacheControl: '3600', upsert: false });
-      if (error) { showToast('Error subiendo imagen', 'error'); console.error(error); return null; }
-      const { data } = sb.storage.from('ecos_imagenes').getPublicUrl(path);
-      return data.publicUrl;
+    async function uploadImage(file){
+      if(!file||!sb)return null;
+      const ext=file.name.split('.').pop(),path=`productos/${Date.now()}_${Math.random().toString(36).substr(2,7)}.${ext}`;
+      const{error}=await sb.storage.from('ecos_imagenes').upload(path,file,{cacheControl:'3600',upsert:false});
+      if(error){showToast('Error subiendo imagen','error');return null}
+      const{data}=sb.storage.from('ecos_imagenes').getPublicUrl(path);return data.publicUrl;
     }
 
-    /* ==================== AUTH SEGURA ==================== */
-    function updateNavIcon() {
-      const i = document.getElementById('navAdmin').querySelector('i');
-      i.className = isLoggedIn ? 'fas fa-unlock' : 'fas fa-lock';
-      i.style.color = isLoggedIn ? 'var(--accent)' : '';
-    }
+    /* ==================== AUTH ==================== */
+    function updateNavIcon(){const i=document.getElementById('navAdmin').querySelector('i');i.className=isLoggedIn?'fas fa-unlock':'fas fa-lock';i.style.color=isLoggedIn?'var(--accent)':''}
 
-    async function checkAuth() {
-      if (!sb) return;
-      try {
-        const { data: { session } } = await sb.auth.getSession();
-        if (session && session.user) {
-          const email = session.user.email.toLowerCase().trim();
-          const admins = (storeData.adminEmails || []).map(e => e.toLowerCase().trim());
-          isLoggedIn = admins.includes(email);
-        } else {
-          isLoggedIn = false;
-        }
-      } catch(e) { isLoggedIn = false; }
+    async function checkAuth(){
+      if(!sb)return;
+      // Verificar sesión actual contra la lista de admins (ya cargada)
+      try{
+        const{data:{session}}=await sb.auth.getSession();
+        if(session&&session.user){const email=session.user.email.toLowerCase().trim();const admins=storeData.adminEmails.map(e=>e.toLowerCase().trim());isLoggedIn=admins.includes(email)}else{isLoggedIn=false}
+      }catch(e){isLoggedIn=false}
       updateNavIcon();
-      sb.auth.onAuthStateChange((ev, session) => {
-        if (session && session.user) {
-          const email = session.user.email.toLowerCase().trim();
-          const admins = (storeData.adminEmails || []).map(e => e.toLowerCase().trim());
-          isLoggedIn = admins.includes(email);
-        } else {
-          isLoggedIn = false;
-        }
+      // Listener para cambios futuros
+      sb.auth.onAuthStateChange((ev,session)=>{
+        if(session&&session.user){const email=session.user.email.toLowerCase().trim();const admins=storeData.adminEmails.map(e=>e.toLowerCase().trim());isLoggedIn=admins.includes(email)}else{isLoggedIn=false}
         updateNavIcon();
       });
     }
 
-    async function handleLogin() {
-      if (!sb) return showToast('Error de conexión', 'error');
-      const email = document.getElementById('loginUser').value.trim();
-      const password = document.getElementById('loginPass').value;
-      const errEl = document.getElementById('loginError');
+    async function handleLogin(){
+      if(!sb)return showToast('Error de conexión','error');
+      const email=document.getElementById('loginUser').value.trim(),password=document.getElementById('loginPass').value,errEl=document.getElementById('loginError');
       errEl.classList.add('hidden');
-
-      const admins = (storeData.adminEmails || []).map(e => e.toLowerCase().trim());
-
-      if (!admins.length) {
-        errEl.textContent = 'No hay emails admin configurados. Pídele al administrador que los agregue.';
-        errEl.classList.remove('hidden');
-        return;
-      }
-      if (!email || !email.includes('@')) {
-        errEl.textContent = 'Escribe un email válido.';
-        errEl.classList.remove('hidden');
-        return;
-      }
-      if (!admins.includes(email.toLowerCase().trim())) {
-        errEl.textContent = 'Acceso no autorizado. Este email no está en la lista de administradores.';
-        errEl.classList.remove('hidden');
-        return;
-      }
-      if (!password) {
-        errEl.textContent = 'Escribe la contraseña.';
-        errEl.classList.remove('hidden');
-        return;
-      }
-
-      try {
-        const { data, error } = await sb.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        if (!data.session || !data.user) throw new Error('No se pudo crear sesión');
-        if (data.user.email.toLowerCase().trim() !== email.toLowerCase().trim()) {
-          await sb.auth.signOut();
-          throw new Error('Email no coincide');
-        }
-        isLoggedIn = true;
-        updateNavIcon();
-        closeAllModals();
-        openAdminPanel('dashboard');
-      } catch (e) {
-        try { await sb.auth.signOut(); } catch(x) {}
-        isLoggedIn = false;
-        updateNavIcon();
-        errEl.textContent = 'Contraseña incorrecta.';
-        errEl.classList.remove('hidden');
+      const admins=storeData.adminEmails.map(e=>e.toLowerCase().trim());
+      if(!admins.length){errEl.textContent='No hay emails admin configurados.';errEl.classList.remove('hidden');return}
+      if(!email||!email.includes('@')){errEl.textContent='Escribe un email válido.';errEl.classList.remove('hidden');return}
+      if(!admins.includes(email.toLowerCase().trim())){errEl.textContent='Email no autorizado.';errEl.classList.remove('hidden');return}
+      if(!password){errEl.textContent='Escribe la contraseña.';errEl.classList.remove('hidden');return}
+      try{
+        const{data,error}=await sb.auth.signInWithPassword({email,password});
+        if(error)throw error;
+        if(!data.session||!data.user)throw new Error('Sin sesión');
+        if(data.user.email.toLowerCase().trim()!==email.toLowerCase().trim()){await sb.auth.signOut();throw new Error('Email no coincide')}
+        isLoggedIn=true;updateNavIcon();closeAllModals();openAdminPanel('dashboard');
+      }catch(e){
+        try{await sb.auth.signOut()}catch(x){}
+        isLoggedIn=false;updateNavIcon();errEl.textContent='Contraseña incorrecta.';errEl.classList.remove('hidden');
       }
     }
 
-    async function handleLogout() {
-      try { if (sb) await sb.auth.signOut(); } catch(e) {}
-      isLoggedIn = false;
-      updateNavIcon();
-      closeAllModals();
-      showToast('Sesión cerrada');
-    }
+    async function handleLogout(){try{if(sb)await sb.auth.signOut()}catch(e){}isLoggedIn=false;updateNavIcon();closeAllModals();showToast('Sesión cerrada')}
 
-    async function handleAdminClick() {
-      if (isLoggedIn && sb) {
-        try {
-          const { data: { session } } = await sb.auth.getSession();
-          if (session && session.user) {
-            const email = session.user.email.toLowerCase().trim();
-            const admins = (storeData.adminEmails || []).map(e => e.toLowerCase().trim());
-            if (admins.includes(email)) {
-              openAdminPanel('dashboard');
-              return;
-            }
-            await sb.auth.signOut();
-          }
-        } catch(e) {}
-        isLoggedIn = false;
-        updateNavIcon();
+    async function handleAdminClick(){
+      if(isLoggedIn&&sb){
+        try{
+          const{data:{session}}=await sb.auth.getSession();
+          if(session&&session.user){const email=session.user.email.toLowerCase().trim();const admins=storeData.adminEmails.map(e=>e.toLowerCase().trim());if(admins.includes(email)){openAdminPanel('dashboard');return}await sb.auth.signOut()}
+        }catch(e){}
+        isLoggedIn=false;updateNavIcon();
       }
       openModal('loginModal');
     }
 
-    /* ==================== ASPECTO ==================== */
-    function applyAppearance() {
-      document.documentElement.style.setProperty('--bg', storeData.backgroundColor || '#FDFBF7');
-      document.documentElement.style.setProperty('--fg', storeData.headerColor || '#1A1A1A');
-      document.documentElement.style.setProperty('--accent', storeData.accentColor || '#D94F30');
-      document.body.style.background = storeData.backgroundColor;
-      document.body.style.color = storeData.headerColor;
-      document.getElementById('heroSubtitle').textContent = storeData.heroSubtitle || 'De todo un poquito por ti';
+    function applyAppearance(){
+      document.documentElement.style.setProperty('--bg',storeData.backgroundColor||'#FDFBF7');
+      document.documentElement.style.setProperty('--fg',storeData.headerColor||'#1A1A1A');
+      document.documentElement.style.setProperty('--accent',storeData.accentColor||'#D94F30');
+      document.body.style.background=storeData.backgroundColor;document.body.style.color=storeData.headerColor;
+      document.getElementById('heroSubtitle').textContent=storeData.heroSubtitle||'De todo un poquito por ti';
     }
 
-    function getUSD(cup) { return Number(cup) / (Number(storeData.exchangeRate) || 300); }
-    function fmtPrice(cup) { return `${getUSD(cup).toFixed(2)} USD <span class="text-[10px] text-drift font-normal">| ${Math.round(Number(cup)).toLocaleString()} CUP</span>`; }
-    function getAllProducts() { return storeData.sections.flatMap(s => (s.products || []).map(p => ({ ...p, section_id: s.id, section_name: s.name }))); }
-    function findProduct(pId) { return getAllProducts().find(p => p.id === Number(pId)); }
+    function getUSD(cup){return Number(cup)/(Number(storeData.exchangeRate)||300)}
+    function fmtPrice(cup){return`${getUSD(cup).toFixed(2)} USD <span class="text-[10px] text-drift font-normal">| ${Math.round(Number(cup)).toLocaleString()} CUP</span>`}
+    function getAllProducts(){return storeData.sections.flatMap(s=>(s.products||[]).map(p=>({...p,section_id:s.id,section_name:s.name})))}
+    function findProduct(pId){return getAllProducts().find(p=>p.id===Number(pId))}
+    window.openLightbox=function(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('active')};
+    window.closeLightbox=function(){document.getElementById('lightbox').classList.remove('active')};
 
-    window.openLightbox = function(src) { document.getElementById('lightboxImg').src = src; document.getElementById('lightbox').classList.add('active'); };
-    window.closeLightbox = function() { document.getElementById('lightbox').classList.remove('active'); };
+    function switchScreen(screen){document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));if(screen==='catalog'){document.getElementById('navCatalog').classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}else if(screen==='cart'){document.getElementById('navCart').classList.add('active');openModal('cartModal');renderCartModal()}}
+    function openModal(id){document.getElementById(id).classList.add('visible');if(id==='cartModal')renderCartModal()}
+    function closeAllModals(){document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('visible'))}
+    function openAdminPanel(pg){openModal('adminModal');window.showAdminPage(pg)}
+    let toastTimer;function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'');clearTimeout(toastTimer);setTimeout(()=>t.classList.add('show'),10);toastTimer=setTimeout(()=>t.classList.remove('show'),3500)}
 
-    function switchScreen(screen) {
-      document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
-      if (screen === 'catalog') { document.getElementById('navCatalog').classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-      else if (screen === 'cart') { document.getElementById('navCart').classList.add('active'); openModal('cartModal'); renderCartModal(); }
-    }
-
-    function openModal(id) { document.getElementById(id).classList.add('visible'); if (id === 'cartModal') renderCartModal(); }
-    function closeAllModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('visible')); }
-    function openAdminPanel(pg) { openModal('adminModal'); window.showAdminPage(pg); }
-    let toastTimer;
-    function showToast(msg, type) { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast ' + (type || ''); clearTimeout(toastTimer); setTimeout(() => t.classList.add('show'), 10); toastTimer = setTimeout(() => t.classList.remove('show'), 3500); }
-
-    /* ==================== DESTACADOS ==================== */
-    function renderFeatured() {
-      const section = document.getElementById('featuredSection'), container = document.getElementById('featuredScroll');
-      const fp = (storeData.featuredProducts || []).map(Number);
-      const prods = getAllProducts().filter(p => fp.includes(p.id) && p.quantity > 0);
-      if (!prods.length) { section.classList.add('hidden'); return; }
+    function renderFeatured(){
+      const section=document.getElementById('featuredSection'),container=document.getElementById('featuredScroll');
+      const fp=(storeData.featuredProducts||[]).map(Number),prods=getAllProducts().filter(p=>fp.includes(p.id)&&p.quantity>0);
+      if(!prods.length){section.classList.add('hidden');return}
       section.classList.remove('hidden');
-      container.innerHTML = prods.map(p => `
-        <div class="featured-card">
-          <div class="h-36 overflow-hidden cursor-zoom-in" onclick="window.openLightbox('${p.image_url || ''}')"><img src="${p.image_url || 'https://picsum.photos/seed/f'+p.id+'/400/400'}" alt="${p.name}" class="w-full h-full object-cover" loading="lazy"></div>
-          <div class="p-3">
-            <h4 class="font-display text-xs font-bold leading-tight mb-1 truncate">${p.name}</h4>
-            <p class="text-sm font-bold mb-2" style="color:var(--accent);">${fmtPrice(p.priceCUP)}</p>
-            <button type="button" onclick="window.addToCart(${p.section_id}, ${p.id})" class="btn-accent-sm w-full py-2 rounded-lg font-bold text-xs"><i class="fas fa-plus mr-1"></i>Agregar</button>
-          </div>
-        </div>`).join('');
+      container.innerHTML=prods.map(p=>`<div class="featured-card"><div class="h-36 overflow-hidden cursor-zoom-in" onclick="window.openLightbox('${p.image_url||''}')"><img src="${p.image_url||'https://picsum.photos/seed/f'+p.id+'/400/400'}" alt="${p.name}" class="w-full h-full object-cover" loading="lazy"></div><div class="p-3"><h4 class="font-display text-xs font-bold leading-tight mb-1 truncate">${p.name}</h4><p class="text-sm font-bold mb-2" style="color:var(--accent)">${fmtPrice(p.priceCUP)}</p><button type="button" onclick="window.addToCart(${p.section_id},${p.id})" class="btn-accent-sm w-full py-2 rounded-lg font-bold text-xs"><i class="fas fa-plus mr-1"></i>Agregar</button></div></div>`).join('');
     }
 
-    /* ==================== CATÁLOGO ==================== */
-    function renderCatalog() {
-      try {
-        if (activeSectionTab >= storeData.sections.length) activeSectionTab = -1;
-        const tC = document.getElementById('sectionTabs'), gC = document.getElementById('productGrid'), secs = storeData.sections || [];
-        let tH = `<button type="button" class="tab-btn ${activeSectionTab === -1 ? 'active' : ''}" onclick="window.setActiveTab(-1)">Todos</button>`;
-        secs.forEach((s, i) => { if (s) tH += `<button type="button" class="tab-btn ${activeSectionTab === i ? 'active' : ''}" onclick="window.setActiveTab(${i})"><i class="${s.icon || 'fas fa-gift'} mr-1"></i>${s.name}</button>`; });
-        tC.innerHTML = tH;
-        const showS = activeSectionTab === -1 ? secs : (secs[activeSectionTab] ? [secs[activeSectionTab]] : []);
-        let pH = '';
-        showS.forEach(s => {
-          if (!s) return;
-          const avail = (s.products || []).filter(p => p.quantity > 0);
-          if (!avail.length) return;
-          if (activeSectionTab === -1 && secs.filter(x => (x.products||[]).some(p => p.quantity > 0)).length > 1)
-            pH += `<div class="col-span-2 mt-5 mb-1"><h3 class="font-display text-lg font-bold flex items-center gap-2"><span class="w-1 h-5 rounded-full inline-block" style="background:var(--accent);"></span>${s.name}</h3></div>`;
-          avail.forEach(p => {
-            const img = p.image_url || 'https://picsum.photos/seed/p'+p.id+'/400/400';
-            pH += `<article class="product-card">
-              <div class="h-40 overflow-hidden cursor-zoom-in" onclick="window.openLightbox('${img}')"><img src="${img}" alt="${p.name}" class="w-full h-full object-cover" loading="lazy"></div>
-              <div class="p-3 flex flex-col flex-grow">
-                <h4 class="font-display text-sm font-bold leading-tight mb-1">${p.name}</h4>
-                <p class="text-sm font-bold mb-3" style="color:var(--accent);">${fmtPrice(p.priceCUP)}</p>
-                <div class="mt-auto"><button type="button" onclick="window.addToCart(${s.id}, ${p.id})" class="btn-accent-sm w-full py-2 rounded-lg font-bold text-xs"><i class="fas fa-bag-shopping mr-1"></i>Agregar</button></div>
-              </div>
-            </article>`;
-          });
+    function renderCatalog(){
+      try{
+        if(activeSectionTab>=storeData.sections.length)activeSectionTab=-1;
+        const tC=document.getElementById('sectionTabs'),gC=document.getElementById('productGrid'),secs=storeData.sections||[];
+        let tH=`<button type="button" class="tab-btn ${activeSectionTab===-1?'active':''}" onclick="window.setActiveTab(-1)">Todos</button>`;
+        secs.forEach((s,i)=>{if(s)tH+=`<button type="button" class="tab-btn ${activeSectionTab===i?'active':''}" onclick="window.setActiveTab(${i})"><i class="${s.icon||'fas fa-gift'} mr-1"></i>${s.name}</button>`});
+        tC.innerHTML=tH;
+        const showS=activeSectionTab===-1?secs:(secs[activeSectionTab]?[secs[activeSectionTab]]:[]);
+        let pH='';
+        showS.forEach(s=>{
+          if(!s)return;const avail=(s.products||[]).filter(p=>p.quantity>0);if(!avail.length)return;
+          if(activeSectionTab===-1&&secs.filter(x=>(x.products||[]).some(p=>p.quantity>0)).length>1)pH+=`<div class="col-span-2 mt-5 mb-1"><h3 class="font-display text-lg font-bold flex items-center gap-2"><span class="w-1 h-5 rounded-full inline-block" style="background:var(--accent)"></span>${s.name}</h3></div>`;
+          avail.forEach(p=>{const img=p.image_url||'https://picsum.photos/seed/p'+p.id+'/400/400';pH+=`<article class="product-card"><div class="h-40 overflow-hidden cursor-zoom-in" onclick="window.openLightbox('${img}')"><img src="${img}" alt="${p.name}" class="w-full h-full object-cover" loading="lazy"></div><div class="p-3 flex flex-col flex-grow"><h4 class="font-display text-sm font-bold leading-tight mb-1">${p.name}</h4><p class="text-sm font-bold mb-3" style="color:var(--accent)">${fmtPrice(p.priceCUP)}</p><div class="mt-auto"><button type="button" onclick="window.addToCart(${s.id},${p.id})" class="btn-accent-sm w-full py-2 rounded-lg font-bold text-xs"><i class="fas fa-bag-shopping mr-1"></i>Agregar</button></div></div></article>`});
         });
-        gC.innerHTML = pH || '<p class="col-span-2 text-center text-drift py-16"><i class="fas fa-box-open text-4xl mb-3 block" style="opacity:0.2;"></i>No hay productos disponibles.</p>';
-      } catch(e) { console.error("Render error:", e); }
+        gC.innerHTML=pH||'<p class="col-span-2 text-center text-drift py-16"><i class="fas fa-box-open text-4xl mb-3 block" style="opacity:0.2"></i>No hay productos disponibles.</p>';
+      }catch(e){console.error(e)}
     }
-    window.setActiveTab = function(i) { activeSectionTab = i; renderCatalog(); };
+    window.setActiveTab=function(i){activeSectionTab=i;renderCatalog()};
 
-    /* ==================== CARRITO ==================== */
-    window.addToCart = function(sId, pId) {
-      const s = storeData.sections.find(x => x.id === Number(sId)); if (!s) return;
-      const p = s.products.find(x => x.id === Number(pId)); if (!p || p.quantity <= 0) { showToast('Producto agotado', 'error'); return; }
-      const inCart = cart.find(x => x.id === p.id);
-      if (inCart) { if (inCart.quantity >= p.quantity) { showToast('No hay más unidades', 'error'); return; } inCart.quantity++; }
-      else cart.push({ id: p.id, name: p.name, priceCUP: p.priceCUP, image: p.image_url, quantity: 1 });
-      updateCartBadge(); showToast('Añadido al carrito', 'success');
-    };
-    window.removeFromCart = function(pId) { cart = cart.filter(x => x.id !== pId); renderCartModal(); updateCartBadge(); };
-    window.updateQuantity = function(pId, d) {
-      const i = cart.find(x => x.id === pId); if (!i) return;
-      i.quantity += d;
-      if (i.quantity <= 0) { removeFromCart(pId); return; }
-      const p = findProduct(pId);
-      if (p && i.quantity > p.quantity) { i.quantity = p.quantity; showToast('Stock máximo', 'error'); }
-      renderCartModal(); updateCartBadge();
-    };
-    function updateCartBadge() { const t = cart.reduce((s, i) => s + i.quantity, 0), b = document.getElementById('cartBadge'); if (t > 0) { b.textContent = t; b.classList.remove('hidden'); } else b.classList.add('hidden'); }
+    window.addToCart=function(sId,pId){const s=storeData.sections.find(x=>x.id===Number(sId));if(!s)return;const p=s.products.find(x=>x.id===Number(pId));if(!p||p.quantity<=0){showToast('Agotado','error');return}const inCart=cart.find(x=>x.id===p.id);if(inCart){if(inCart.quantity>=p.quantity){showToast('Stock máximo','error');return}inCart.quantity++}else cart.push({id:p.id,name:p.name,priceCUP:p.priceCUP,image:p.image_url,quantity:1});updateCartBadge();showToast('Añadido','success')};
+    window.removeFromCart=function(pId){cart=cart.filter(x=>x.id!==pId);renderCartModal();updateCartBadge()};
+    window.updateQuantity=function(pId,d){const i=cart.find(x=>x.id===pId);if(!i)return;i.quantity+=d;if(i.quantity<=0){removeFromCart(pId);return}const p=findProduct(pId);if(p&&i.quantity>p.quantity){i.quantity=p.quantity;showToast('Stock máximo','error')}renderCartModal();updateCartBadge()};
+    function updateCartBadge(){const t=cart.reduce((s,i)=>s+i.quantity,0),b=document.getElementById('cartBadge');if(t>0){b.textContent=t;b.classList.remove('hidden')}else b.classList.add('hidden')}
 
-    function renderCartModal() {
-      const cI = document.getElementById('cartItems'), cF = document.getElementById('checkoutForm');
-      if (!cart.length) { cI.innerHTML = '<div class="text-center py-10"><i class="fas fa-bag-shopping text-5xl mb-3 block" style="color:var(--accent);opacity:0.15;"></i><p class="text-drift">Tu carrito está vacío</p></div>'; cF.classList.add('hidden'); return; }
-      let h = '', tCUP = 0;
-      cart.forEach(i => {
-        const sub = (i.priceCUP || 0) * i.quantity; tCUP += sub;
-        h += `<div class="flex gap-3 items-center border-b pb-3" style="border-color:var(--border);">
-          <img src="${i.image || ''}" class="w-14 h-14 rounded-xl object-cover border" style="border-color:var(--border);">
-          <div class="flex-grow min-w-0"><h4 class="font-bold text-sm truncate">${i.name}</h4><p class="text-xs" style="color:var(--accent);">${fmtPrice(i.priceCUP)}</p></div>
-          <div class="flex items-center gap-2 shrink-0">
-            <button type="button" onclick="window.updateQuantity(${i.id},-1)" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style="background:var(--accent-light);color:var(--fg);">-</button>
-            <span class="font-bold w-4 text-center text-sm">${i.quantity}</span>
-            <button type="button" onclick="window.updateQuantity(${i.id},1)" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:var(--accent);">+</button>
-          </div></div>`;
-      });
-      cI.innerHTML = h;
-      document.getElementById('cartTotalSummary').innerHTML = `<p class="font-bold text-lg" style="color:var(--accent);">Total productos: ${getUSD(tCUP).toFixed(2)} USD | ${Math.round(tCUP).toLocaleString()} CUP</p><p class="text-[11px] text-drift mt-1">+ costo de mensajería por confirmar</p>`;
+    function renderCartModal(){
+      const cI=document.getElementById('cartItems'),cF=document.getElementById('checkoutForm');
+      if(!cart.length){cI.innerHTML='<div class="text-center py-10"><i class="fas fa-bag-shopping text-5xl mb-3 block" style="color:var(--accent);opacity:0.15"></i><p class="text-drift">Carrito vacío</p></div>';cF.classList.add('hidden');return}
+      let h='',tCUP=0;
+      cart.forEach(i=>{const sub=(i.priceCUP||0)*i.quantity;tCUP+=sub;h+=`<div class="flex gap-3 items-center border-b pb-3" style="border-color:var(--border)"><img src="${i.image||''}" class="w-14 h-14 rounded-xl object-cover border" style="border-color:var(--border)"><div class="flex-grow min-w-0"><h4 class="font-bold text-sm truncate">${i.name}</h4><p class="text-xs" style="color:var(--accent)">${fmtPrice(i.priceCUP)}</p></div><div class="flex items-center gap-2 shrink-0"><button type="button" onclick="window.updateQuantity(${i.id},-1)" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style="background:var(--accent-light);color:var(--fg)">-</button><span class="font-bold w-4 text-center text-sm">${i.quantity}</span><button type="button" onclick="window.updateQuantity(${i.id},1)" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:var(--accent)">+</button></div></div>`});
+      cI.innerHTML=h;
+      document.getElementById('cartTotalSummary').innerHTML=`<p class="font-bold text-lg" style="color:var(--accent)">Total: ${getUSD(tCUP).toFixed(2)} USD | ${Math.round(tCUP).toLocaleString()} CUP</p><p class="text-[11px] text-drift mt-1">+ mensajería por confirmar</p>`;
       cF.classList.remove('hidden');
     }
 
-    async function sendWhatsappOrder() {
-      const name = document.getElementById('checkName').value.trim(), phone = document.getElementById('checkPhone').value.trim();
-      const address = document.getElementById('checkAddress').value.trim();
-      const payment = document.getElementById('checkPayment').value, notes = document.getElementById('checkNotes').value.trim();
-      if (!name || !phone || !address) { showToast('Completa nombre, teléfono y dirección', 'error'); return; }
-      let msg = `🛍️ *Pedido de ${storeData.storeName}*\n\n👤 *Cliente:* ${name}\n📞 *Teléfono:* ${phone}\n📍 *Dirección:* ${address}\n💳 *Pago:* ${payment}\n`;
-      if (notes) msg += `📝 *Notas:* ${notes}\n`;
-      msg += `\n📦 *Productos:*\n`;
-      let tCUP = 0, updates = [];
-      cart.forEach(i => {
-        const sub = (i.priceCUP || 0) * i.quantity; tCUP += sub;
-        msg += `  • ${i.name} x${i.quantity} — ${getUSD(sub).toFixed(2)} USD\n`;
-        const p = findProduct(i.id);
-        if (p) { p.quantity = Math.max(0, p.quantity - i.quantity); updates.push(sb.from('products').update({ quantity: p.quantity }).eq('id', p.id)); }
-      });
-      msg += `\n💰 *Total productos:* ${getUSD(tCUP).toFixed(2)} USD | ${Math.round(tCUP).toLocaleString()} CUP\n\n🚚 *Mensajería:* El costo varía según la ubicación. Por favor confirmar el costo de envío al cliente.`;
-      try { await Promise.all(updates); await fetchStoreData(); } catch(e) {}
-      window.open(`https://wa.me/${(storeData.whatsappNumber || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
-      cart = []; updateCartBadge(); closeAllModals();
+    async function sendWhatsappOrder(){
+      const name=document.getElementById('checkName').value.trim(),phone=document.getElementById('checkPhone').value.trim(),address=document.getElementById('checkAddress').value.trim(),payment=document.getElementById('checkPayment').value,notes=document.getElementById('checkNotes').value.trim();
+      if(!name||!phone||!address){showToast('Completa nombre, teléfono y dirección','error');return}
+      let msg=`🛍️ *Pedido ${storeData.storeName}*\n\n👤 ${name}\n📞 ${phone}\n📍 ${address}\n💳 ${payment}\n`;
+      if(notes)msg+=`📝 ${notes}\n`;msg+=`\n📦 *Productos:*\n`;
+      let tCUP=0,updates=[];
+      cart.forEach(i=>{const sub=(i.priceCUP||0)*i.quantity;tCUP+=sub;msg+=`  • ${i.name} x${i.quantity} — ${getUSD(sub).toFixed(2)} USD\n`;const p=findProduct(i.id);if(p){p.quantity=Math.max(0,p.quantity-i.quantity);updates.push(sb.from('products').update({quantity:p.quantity}).eq('id',p.id))}});
+      msg+=`\n💰 *Total:* ${getUSD(tCUP).toFixed(2)} USD | ${Math.round(tCUP).toLocaleString()} CUP\n\n🚚 *Mensajería:* Confirmar costo según ubicación.`;
+      try{await Promise.all(updates);await fetchStoreData()}catch(e){}
+      window.open(`https://wa.me/${(storeData.whatsappNumber||'').replace(/[^0-9]/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');
+      cart=[];updateCartBadge();closeAllModals();
     }
 
-    /* ==================== ADMIN ==================== */
-    function showAdminPage(pg) {
-      currentAdminPage = pg; editingSectionId = null; editingProductId = null;
-      document.querySelectorAll('.admin-tab').forEach(b => { const a = b.dataset.page === pg; b.style.background = a ? 'rgba(217,79,48,0.15)' : ''; b.style.color = a ? '#D94F30' : '#6B7280'; });
-      const c = document.getElementById('adminContent');
-      const pages = { dashboard: renderDashboard, featured: renderAdminFeatured, sections: renderSectionList, products: renderProductList, appearance: renderAppearance, settings: renderSettings };
-      if (pages[pg]) pages[pg](c);
-    }
-    window.showAdminPage = showAdminPage;
+    function showAdminPage(pg){currentAdminPage=pg;editingSectionId=null;editingProductId=null;document.querySelectorAll('.admin-tab').forEach(b=>{const a=b.dataset.page===pg;b.style.background=a?'rgba(217,79,48,0.15)':'';b.style.color=a?'#D94F30':'#6B7280'});const c=document.getElementById('adminContent');const pages={dashboard:renderDashboard,featured:renderAdminFeatured,sections:renderSectionList,products:renderProductList,appearance:renderAppearance,settings:renderSettings};if(pages[pg])pages[pg](c)}
+    window.showAdminPage=showAdminPage;
 
-    function renderDashboard(el) {
-      let t = 0, out = 0, feat = 0;
-      const fp = (storeData.featuredProducts || []).map(Number);
-      storeData.sections.forEach(s => { (s.products||[]).forEach(p => { t++; if (p.quantity <= 0) out++; if (fp.includes(p.id)) feat++; }); });
-      el.innerHTML = `<div class="mb-6"><p class="text-gray-500 text-sm mb-1">Panel de</p><h3 class="font-display text-xl font-bold" style="color:#D94F30;">${storeData.storeName}</h3></div>
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-[10px] mb-1">SECCIONES</p><p class="text-2xl font-bold" style="color:#D94F30;">${storeData.sections.length}</p></div>
-          <div class="bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-[10px] mb-1">PRODUCTOS</p><p class="text-2xl font-bold">${t}</p></div>
-          <div class="bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-[10px] mb-1">DESTACADOS</p><p class="text-2xl font-bold" style="color:#FBBF24;">${feat}</p></div>
-          <div class="bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-[10px] mb-1">AGOTADOS</p><p class="text-2xl font-bold ${out ? 'text-red-400' : 'text-green-400'}">${out}</p></div>
-        </div>
-        <div class="mt-4 bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-xs">Tasa: <span class="text-white font-bold">1 USD = <span style="color:#D94F30;">${Math.round(storeData.exchangeRate).toLocaleString()}</span> CUP</span></p></div>
-        ${!storeData.adminEmails.length ? '<div class="mt-4 bg-yellow-900/20 border border-yellow-700/40 rounded-xl p-4"><p class="text-yellow-400 text-sm font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Configura al menos un email admin en Config.</p></div>' : `<div class="mt-4 bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-xs"><i class="fas fa-shield-halved mr-1" style="color:#16A34A;"></i>Admins: <span class="text-white font-bold">${storeData.adminEmails.length}</span></p></div>`}`;
-    }
+    function renderDashboard(el){let t=0,out=0,feat=0;const fp=(storeData.featuredProducts||[]).map(Number);storeData.sections.forEach(s=>{(s.products||[]).forEach(p=>{t++;if(p.quantity<=0)out++;if(fp.includes(p.id))feat++})});el.innerHTML=`<div class="mb-6"><p class="text-gray-500 text-sm mb-1">Panel de</p><h3 class="font-display text-xl font-bold" style="color:#D94F30">${storeData.storeName}</h3></div><div class="grid grid-cols-2 gap-3"><div class="bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-[10px] mb-1">SECCIONES</p><p class="text-2xl font-bold" style="color:#D94F30">${storeData.sections.length}</p></div><div class="bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-[10px] mb-1">PRODUCTOS</p><p class="text-2xl font-bold">${t}</p></div><div class="bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-[10px] mb-1">DESTACADOS</p><p class="text-2xl font-bold" style="color:#FBBF24">${feat}</p></div><div class="bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-[10px] mb-1">AGOTADOS</p><p class="text-2xl font-bold ${out?'text-red-400':'text-green-400'}">${out}</p></div></div><div class="mt-4 bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-xs">1 USD = <span class="text-white font-bold" style="color:#D94F30">${Math.round(storeData.exchangeRate).toLocaleString()}</span> CUP</p></div>${!storeData.adminEmails.length?'<div class="mt-4 bg-yellow-900/20 border border-yellow-700/40 rounded-xl p-4"><p class="text-yellow-400 text-sm font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Configura emails admin en Config.</p></div>':`<div class="mt-4 bg-adminCard rounded-xl p-4 border border-gray-700"><p class="text-gray-500 text-xs"><i class="fas fa-shield-halved mr-1" style="color:#16A34A"></i>Admins: <span class="text-white font-bold">${storeData.adminEmails.length}</span></p></div>`}`}
 
-    function renderAdminFeatured(el) {
-      const fp = (storeData.featuredProducts || []).map(Number);
-      const all = getAllProducts(), feat = all.filter(p => fp.includes(p.id)), noFeat = all.filter(p => !fp.includes(p.id));
-      let h = '<p class="text-gray-400 text-xs mb-4">Toca la estrella para marcar o quitar destacados.</p>';
-      if (feat.length) {
-        h += `<p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wider"><i class="fas fa-star mr-1" style="color:#FBBF24;"></i>Destacados (${feat.length})</p><div class="space-y-2 mb-6">`;
-        feat.forEach(p => { h += `<div class="bg-adminCard rounded-xl p-3 border border-yellow-900/30 flex items-center gap-3"><img src="${p.image_url || ''}" class="w-10 h-10 rounded-lg object-cover bg-gray-800"><div class="flex-grow min-w-0"><p class="text-sm font-bold truncate">${p.name}</p><p class="text-xs" style="color:#D94F30;">${fmtPrice(p.priceCUP)}</p></div><button type="button" onclick="window.toggleFeatured(${p.id})" class="star-btn active text-xl"><i class="fas fa-star"></i></button></div>`; });
-        h += '</div>';
-      }
-      if (noFeat.length) {
-        h += `<p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wider">Otros (${noFeat.length})</p><div class="space-y-2">`;
-        noFeat.forEach(p => { h += `<div class="bg-adminCard rounded-xl p-3 border border-gray-700 flex items-center gap-3"><img src="${p.image_url || ''}" class="w-10 h-10 rounded-lg object-cover bg-gray-800"><div class="flex-grow min-w-0"><p class="text-sm font-bold truncate">${p.name}</p><p class="text-xs text-gray-400">${fmtPrice(p.priceCUP)}</p></div><button type="button" onclick="window.toggleFeatured(${p.id})" class="star-btn text-xl text-gray-600"><i class="far fa-star"></i></button></div>`; });
-        h += '</div>';
-      }
-      if (!all.length) h += '<p class="text-center text-gray-500 py-8 text-sm">No hay productos.</p>';
-      el.innerHTML = h;
-    }
-    window.toggleFeatured = async function(pId) {
-      const fp = (storeData.featuredProducts || []).map(Number);
-      const idx = fp.indexOf(Number(pId));
-      if (idx >= 0) fp.splice(idx, 1); else fp.push(Number(pId));
-      storeData.featuredProducts = fp;
-      try { await sb.from('store_settings').update({ "featuredProducts": fp }).eq('id', 1); showToast(idx >= 0 ? 'Quitado de destacados' : 'Añadido a destacados', 'success'); await fetchStoreData(); } catch(e) { showToast('Error', 'error'); }
-    };
+    function renderAdminFeatured(el){const fp=(storeData.featuredProducts||[]).map(Number);const all=getAllProducts(),feat=all.filter(p=>fp.includes(p.id)),noFeat=all.filter(p=>!fp.includes(p.id));let h='<p class="text-gray-400 text-xs mb-4">Toca la estrella para marcar destacados.</p>';if(feat.length){h+=`<p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wider"><i class="fas fa-star mr-1" style="color:#FBBF24"></i>Destacados (${feat.length})</p><div class="space-y-2 mb-6">`;feat.forEach(p=>{h+=`<div class="bg-adminCard rounded-xl p-3 border border-yellow-900/30 flex items-center gap-3"><img src="${p.image_url||''}" class="w-10 h-10 rounded-lg object-cover bg-gray-800"><div class="flex-grow min-w-0"><p class="text-sm font-bold truncate">${p.name}</p><p class="text-xs" style="color:#D94F30">${fmtPrice(p.priceCUP)}</p></div><button type="button" onclick="window.toggleFeatured(${p.id})" class="star-btn active text-xl"><i class="fas fa-star"></i></button></div>`});h+='</div>'}if(noFeat.length){h+=`<p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wider">Otros (${noFeat.length})</p><div class="space-y-2">`;noFeat.forEach(p=>{h+=`<div class="bg-adminCard rounded-xl p-3 border border-gray-700 flex items-center gap-3"><img src="${p.image_url||''}" class="w-10 h-10 rounded-lg object-cover bg-gray-800"><div class="flex-grow min-w-0"><p class="text-sm font-bold truncate">${p.name}</p><p class="text-xs text-gray-400">${fmtPrice(p.priceCUP)}</p></div><button type="button" onclick="window.toggleFeatured(${p.id})" class="star-btn text-xl text-gray-600"><i class="far fa-star"></i></button></div>`});h+='</div>'}if(!all.length)h+='<p class="text-center text-gray-500 py-8 text-sm">Sin productos.</p>';el.innerHTML=h}
+    window.toggleFeatured=async function(pId){const fp=(storeData.featuredProducts||[]).map(Number);const idx=fp.indexOf(Number(pId));if(idx>=0)fp.splice(idx,1);else fp.push(Number(pId));storeData.featuredProducts=fp;try{await sb.from('store_settings').update({"featuredProducts":fp}).eq('id',1);showToast(idx>=0?'Quitado':'Destacado','success');await fetchStoreData()}catch(e){showToast('Error','error')}};
 
-    /* --- Secciones --- */
-    function renderSectionList(el) {
-      let l = '';
-      storeData.sections.forEach(s => {
-        const c = (s.products||[]).length;
-        l += `<div class="bg-adminCard rounded-xl p-4 border border-gray-700 flex justify-between items-center gap-3"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style="background:rgba(217,79,48,0.12);"><i class="${s.icon || 'fas fa-gift'}" style="color:#D94F30;"></i></div><div class="min-w-0"><span class="font-bold text-sm block truncate">${s.name}</span><span class="text-gray-500 text-xs">${c} producto${c!==1?'s':''}</span></div></div><div class="flex gap-2 shrink-0"><button type="button" onclick="window.renderSectionForm(${s.id})" class="px-3 py-2 rounded-lg bg-gray-700 text-xs font-bold hover:bg-gray-600 transition">Editar</button><button type="button" onclick="window.deleteSection(${s.id})" class="px-3 py-2 rounded-lg bg-red-900/30 text-red-400 text-xs font-bold hover:bg-red-900/50 transition">Eliminar</button></div></div>`;
-      });
-      el.innerHTML = `<button type="button" onclick="window.renderSectionForm(null)" class="w-full px-4 py-3 rounded-xl font-bold text-white text-sm btn-accent mb-4"><i class="fas fa-plus mr-2"></i>Nueva Sección</button><div class="space-y-3">${l}</div>`;
-    }
-    window.renderSectionForm = function(id) {
-      editingSectionId = id; const s = id ? storeData.sections.find(x => x.id === Number(id)) : null;
-      document.getElementById('adminContent').innerHTML = `<button type="button" onclick="window.showAdminPage('sections')" class="text-gray-400 hover:text-white mb-4 inline-flex items-center gap-2 text-sm"><i class="fas fa-arrow-left"></i>Volver</button><h3 class="font-display text-lg font-bold mb-4">${s ? 'Editar' : 'Nueva'} Sección</h3><div class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Nombre *</label><input id="sf_name" type="text" value="${s ? s.name : ''}" class="admin-input"></div><div><label class="block text-xs text-gray-400 mb-1">Icono</label><input id="sf_icon" type="text" value="${s ? s.icon : 'fas fa-gift'}" class="admin-input"><p class="text-[10px] text-gray-500 mt-1"><a href="https://fontawesome.com/icons" target="_blank" style="color:#D94F30;" class="underline">Ver iconos</a></p></div><button type="button" onclick="window.saveSection()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar</button></div>`;
-    };
-    window.saveSection = async function() {
-      const name = document.getElementById('sf_name').value.trim(), icon = document.getElementById('sf_icon').value.trim() || 'fas fa-gift';
-      if (!name) { showToast('Nombre obligatorio', 'error'); return; }
-      try { if (editingSectionId) await sb.from('sections').update({ name, icon }).eq('id', editingSectionId); else await sb.from('sections').insert({ name, icon }); showToast('Sección guardada', 'success'); await fetchStoreData(); window.showAdminPage('sections'); } catch(e) { showToast('Error: ' + e.message, 'error'); }
-    };
-    window.deleteSection = async function(id) {
-      if (!confirm('¿Eliminar sección y sus productos?')) return;
-      try { const sec = storeData.sections.find(s => s.id === Number(id)); if (sec) { const pIds = sec.products.map(p => p.id); await sb.from('store_settings').update({ "featuredProducts": storeData.featuredProducts.filter(fid => !pIds.includes(fid)) }).eq('id', 1); } await sb.from('products').delete().eq('section_id', id); await sb.from('sections').delete().eq('id', id); showToast('Eliminada', 'success'); await fetchStoreData(); window.showAdminPage('sections'); } catch(e) { showToast('Error: ' + e.message, 'error'); }
-    };
+    function renderSectionList(el){let l='';storeData.sections.forEach(s=>{const c=(s.products||[]).length;l+=`<div class="bg-adminCard rounded-xl p-4 border border-gray-700 flex justify-between items-center gap-3"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style="background:rgba(217,79,48,0.12)"><i class="${s.icon||'fas fa-gift'}" style="color:#D94F30"></i></div><div class="min-w-0"><span class="font-bold text-sm block truncate">${s.name}</span><span class="text-gray-500 text-xs">${c} producto${c!==1?'s':''}</span></div></div><div class="flex gap-2 shrink-0"><button type="button" onclick="window.renderSectionForm(${s.id})" class="px-3 py-2 rounded-lg bg-gray-700 text-xs font-bold hover:bg-gray-600 transition">Editar</button><button type="button" onclick="window.deleteSection(${s.id})" class="px-3 py-2 rounded-lg bg-red-900/30 text-red-400 text-xs font-bold hover:bg-red-900/50 transition">Eliminar</button></div></div>`});el.innerHTML=`<button type="button" onclick="window.renderSectionForm(null)" class="w-full px-4 py-3 rounded-xl font-bold text-white text-sm btn-accent mb-4"><i class="fas fa-plus mr-2"></i>Nueva Sección</button><div class="space-y-3">${l}</div>`}
+    window.renderSectionForm=function(id){editingSectionId=id;const s=id?storeData.sections.find(x=>x.id===Number(id)):null;document.getElementById('adminContent').innerHTML=`<button type="button" onclick="window.showAdminPage('sections')" class="text-gray-400 hover:text-white mb-4 inline-flex items-center gap-2 text-sm"><i class="fas fa-arrow-left"></i>Volver</button><h3 class="font-display text-lg font-bold mb-4">${s?'Editar':'Nueva'} Sección</h3><div class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Nombre *</label><input id="sf_name" type="text" value="${s?s.name:''}" class="admin-input"></div><div><label class="block text-xs text-gray-400 mb-1">Icono</label><input id="sf_icon" type="text" value="${s?s.icon:'fas fa-gift'}" class="admin-input"></div><button type="button" onclick="window.saveSection()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar</button></div>`};
+    window.saveSection=async function(){const name=document.getElementById('sf_name').value.trim(),icon=document.getElementById('sf_icon').value.trim()||'fas fa-gift';if(!name){showToast('Nombre obligatorio','error');return}try{if(editingSectionId)await sb.from('sections').update({name,icon}).eq('id',editingSectionId);else await sb.from('sections').insert({name,icon});showToast('Guardado','success');await fetchStoreData();window.showAdminPage('sections')}catch(e){showToast('Error: '+e.message,'error')}};
+    window.deleteSection=async function(id){if(!confirm('¿Eliminar sección y productos?'))return;try{const sec=storeData.sections.find(s=>s.id===Number(id));if(sec){const pIds=sec.products.map(p=>p.id);await sb.from('store_settings').update({"featuredProducts":storeData.featuredProducts.filter(fid=>!pIds.includes(fid))}).eq('id',1)}await sb.from('products').delete().eq('section_id',id);await sb.from('sections').delete().eq('id',id);showToast('Eliminada','success');await fetchStoreData();window.showAdminPage('sections')}catch(e){showToast('Error','error')}};
 
-    /* --- Productos --- */
-    function renderProductList(el) {
-      if (!storeData.sections.length) { el.innerHTML = '<div class="text-center py-12 text-gray-500"><i class="fas fa-layer-group text-4xl mb-3 block opacity-30"></i><p class="text-sm">Crea una sección primero.</p><button type="button" onclick="window.showAdminPage(\'sections\')" class="mt-4 px-4 py-2 rounded-lg bg-gray-700 text-xs font-bold hover:bg-gray-600">Ir a Secciones</button></div>'; return; }
-      if (adminSelectedSection >= storeData.sections.length) adminSelectedSection = 0;
-      let sH = ''; storeData.sections.forEach((s, i) => { sH += `<option value="${i}" ${adminSelectedSection === i ? 'selected' : ''}>${s.name}</option>`; });
-      const sec = storeData.sections[adminSelectedSection];
-      const fp = (storeData.featuredProducts || []).map(Number);
-      let pH = '';
-      if (sec && sec.products) { sec.products.forEach(p => { if (!p) return; const isF = fp.includes(p.id); pH += `<div class="bg-adminCard rounded-xl border ${isF ? 'border-yellow-900/40' : 'border-gray-700'} overflow-hidden relative"><button type="button" onclick="window.toggleFeatured(${p.id})" class="star-btn ${isF ? 'active' : ''} absolute top-2 right-2 z-10 w-8 h-8 rounded-full flex items-center justify-center text-sm ${isF ? 'bg-yellow-900/40 text-yellow-400' : 'bg-black/40 text-gray-400'}"><i class="${isF ? 'fas' : 'far'} fa-star"></i></button><img src="${p.image_url || 'https://picsum.photos/seed/d'+p.id+'/400/400'}" class="w-full h-28 object-cover bg-gray-800"><div class="p-3"><div class="flex items-start justify-between gap-1 mb-0.5"><h4 class="font-bold text-xs truncate flex-1">${p.name}</h4>${isF ? '<span class="text-[8px] bg-yellow-900/40 text-yellow-400 px-1.5 py-0.5 rounded-full shrink-0">DESTACADO</span>' : ''}</div><p class="text-sm font-bold mb-1" style="color:#D94F30;">${fmtPrice(p.priceCUP)}</p><p class="text-[10px] mb-2 ${p.quantity > 0 ? 'text-green-400' : 'text-red-400'}"><i class="fas fa-boxes-stacked mr-1"></i>Stock: ${p.quantity}</p><div class="flex gap-2"><button type="button" onclick="window.renderProductForm(${sec.id}, ${p.id})" class="flex-1 py-1.5 rounded-lg bg-gray-700 text-[11px] font-bold hover:bg-gray-600 transition">Editar</button><button type="button" onclick="window.deleteProduct(${p.id})" class="flex-1 py-1.5 rounded-lg bg-red-900/30 text-red-400 text-[11px] font-bold hover:bg-red-900/50 transition">Eliminar</button></div></div></div>`; }); }
-      el.innerHTML = `<div class="flex flex-col gap-3 mb-4"><select id="adminSectionSelect" class="admin-input text-sm">${sH}</select><button type="button" onclick="window.renderProductForm(${sec.id}, null)" class="w-full px-4 py-3 rounded-xl font-bold text-white text-sm btn-accent"><i class="fas fa-plus mr-2"></i>Nuevo en "${sec.name}"</button></div><div class="grid grid-cols-2 gap-3">${pH || '<p class="col-span-2 text-center text-gray-500 text-sm py-6">Sin productos.</p>'}</div>`;
-      setTimeout(() => { const sel = document.getElementById('adminSectionSelect'); if (sel) sel.onchange = function() { adminSelectedSection = parseInt(this.value); renderProductList(document.getElementById('adminContent')); }; }, 50);
-    }
-    window.renderProductForm = function(secId, prodId) {
-      editingProductSectionId = secId; editingProductId = prodId;
-      const s = storeData.sections.find(x => x.id === Number(secId));
-      const p = prodId ? s?.products.find(x => x.id === Number(prodId)) : null;
-      const rate = Number(storeData.exchangeRate) || 300;
-      document.getElementById('adminContent').innerHTML = `<button type="button" onclick="window.showAdminPage('products')" class="text-gray-400 hover:text-white mb-4 inline-flex items-center gap-2 text-sm"><i class="fas fa-arrow-left"></i>Volver</button><h3 class="font-display text-lg font-bold mb-1">${p ? 'Editar' : 'Nuevo'} Producto</h3><p class="text-xs text-gray-500 mb-4">Sección: <span style="color:#D94F30;">${s?.name}</span></p><div class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Nombre *</label><input id="pf_name" type="text" value="${p ? p.name : ''}" class="admin-input"></div><div class="grid grid-cols-2 gap-3"><div><label class="block text-xs text-gray-400 mb-1">Precio (CUP) *</label><input id="pf_priceCUP" type="number" min="0" value="${p ? p.priceCUP : 0}" class="admin-input" oninput="document.getElementById('pf_usd').textContent=(Number(this.value)/${rate}).toFixed(2)"><p class="text-[10px] text-gray-500 mt-1">≈ <span id="pf_usd">${getUSD(p ? p.priceCUP : 0).toFixed(2)}</span> USD</p></div><div><label class="block text-xs text-gray-400 mb-1">Stock *</label><input id="pf_quantity" type="number" min="0" value="${p ? p.quantity : 10}" class="admin-input"></div></div><div><label class="block text-xs text-gray-400 mb-1"><i class="fas fa-image mr-1"></i>Imagen</label><input type="file" id="pf_file" accept="image/*" class="admin-input text-xs py-2"><img id="pf_preview" src="${p ? p.image_url : ''}" class="w-full h-32 object-contain rounded-xl mt-2 bg-gray-800 border border-gray-700 ${p?.image_url ? '' : 'hidden'}"></div><button type="button" id="saveProdBtn" onclick="window.saveProduct()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar Producto</button></div>`;
-      setTimeout(() => { const f = document.getElementById('pf_file'); if (f) f.onchange = function() { const pr = document.getElementById('pf_preview'); if (this.files[0]) { pr.src = URL.createObjectURL(this.files[0]); pr.classList.remove('hidden'); } }; }, 50);
-    };
-    window.saveProduct = async function() {
-      const name = document.getElementById('pf_name').value.trim(), priceCUP = Number(document.getElementById('pf_priceCUP').value) || 0, quantity = Number(document.getElementById('pf_quantity').value) || 0;
-      const file = document.getElementById('pf_file').files[0], btn = document.getElementById('saveProdBtn');
-      if (!name) { showToast('Nombre obligatorio', 'error'); return; }
-      if (priceCUP <= 0) { showToast('Precio > 0', 'error'); return; }
-      btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
-      try { let imgUrl = editingProductId ? (findProduct(editingProductId)?.image_url || '') : ''; if (file) { imgUrl = await uploadImage(file); if (!imgUrl) { btn.disabled = false; btn.innerHTML = 'Guardar Producto'; return; } } if (!imgUrl) imgUrl = `https://picsum.photos/seed/${Date.now()}/400/400`; const payload = { name, "priceCUP": priceCUP, quantity, "image_url": imgUrl, "section_id": Number(editingProductSectionId) }; if (editingProductId) await sb.from('products').update(payload).eq('id', editingProductId); else await sb.from('products').insert(payload); showToast('Producto guardado', 'success'); await fetchStoreData(); window.showAdminPage('products'); } catch(e) { showToast('Error: ' + e.message, 'error'); btn.disabled = false; btn.innerHTML = 'Guardar Producto'; }
-    };
-    window.deleteProduct = async function(pId) {
-      if (!confirm('¿Eliminar este producto?')) return;
-      try { await sb.from('products').delete().eq('id', pId); await sb.from('store_settings').update({ "featuredProducts": storeData.featuredProducts.filter(id => id !== Number(pId)) }).eq('id', 1); showToast('Eliminado', 'success'); await fetchStoreData(); renderProductList(document.getElementById('adminContent')); } catch(e) { showToast('Error: ' + e.message, 'error'); }
-    };
+    function renderProductList(el){if(!storeData.sections.length){el.innerHTML='<div class="text-center py-12 text-gray-500"><p class="text-sm">Crea una sección primero.</p></div>';return}if(adminSelectedSection>=storeData.sections.length)adminSelectedSection=0;let sH='';storeData.sections.forEach((s,i)=>{sH+=`<option value="${i}" ${adminSelectedSection===i?'selected':''}>${s.name}</option>`});const sec=storeData.sections[adminSelectedSection];const fp=(storeData.featuredProducts||[]).map(Number);let pH='';if(sec&&sec.products){sec.products.forEach(p=>{if(!p)return;const isF=fp.includes(p.id);pH+=`<div class="bg-adminCard rounded-xl border ${isF?'border-yellow-900/40':'border-gray-700'} overflow-hidden relative"><button type="button" onclick="window.toggleFeatured(${p.id})" class="star-btn ${isF?'active':''} absolute top-2 right-2 z-10 w-8 h-8 rounded-full flex items-center justify-center text-sm ${isF?'bg-yellow-900/40 text-yellow-400':'bg-black/40 text-gray-400'}"><i class="${isF?'fas':'far'} fa-star"></i></button><img src="${p.image_url||'https://picsum.photos/seed/d'+p.id+'/400/400'}" class="w-full h-28 object-cover bg-gray-800"><div class="p-3"><div class="flex items-start justify-between gap-1 mb-0.5"><h4 class="font-bold text-xs truncate flex-1">${p.name}</h4>${isF?'<span class="text-[8px] bg-yellow-900/40 text-yellow-400 px-1.5 py-0.5 rounded-full shrink-0">★</span>':''}</div><p class="text-sm font-bold mb-1" style="color:#D94F30">${fmtPrice(p.priceCUP)}</p><p class="text-[10px] mb-2 ${p.quantity>0?'text-green-400':'text-red-400'}"><i class="fas fa-boxes-stacked mr-1"></i>Stock: ${p.quantity}</p><div class="flex gap-2"><button type="button" onclick="window.renderProductForm(${sec.id},${p.id})" class="flex-1 py-1.5 rounded-lg bg-gray-700 text-[11px] font-bold hover:bg-gray-600 transition">Editar</button><button type="button" onclick="window.deleteProduct(${p.id})" class="flex-1 py-1.5 rounded-lg bg-red-900/30 text-red-400 text-[11px] font-bold hover:bg-red-900/50 transition">Eliminar</button></div></div></div>`})}el.innerHTML=`<div class="flex flex-col gap-3 mb-4"><select id="adminSectionSelect" class="admin-input text-sm">${sH}</select><button type="button" onclick="window.renderProductForm(${sec.id},null)" class="w-full px-4 py-3 rounded-xl font-bold text-white text-sm btn-accent"><i class="fas fa-plus mr-2"></i>Nuevo en "${sec.name}"</button></div><div class="grid grid-cols-2 gap-3">${pH||'<p class="col-span-2 text-center text-gray-500 text-sm py-6">Sin productos.</p>'}</div>`;setTimeout(()=>{const sel=document.getElementById('adminSectionSelect');if(sel)sel.onchange=function(){adminSelectedSection=parseInt(this.value);renderProductList(document.getElementById('adminContent'))}},50)}
+    window.renderProductForm=function(secId,prodId){editingProductSectionId=secId;editingProductId=prodId;const s=storeData.sections.find(x=>x.id===Number(secId));const p=prodId?s?.products.find(x=>x.id===Number(prodId)):null;const rate=Number(storeData.exchangeRate)||300;document.getElementById('adminContent').innerHTML=`<button type="button" onclick="window.showAdminPage('products')" class="text-gray-400 hover:text-white mb-4 inline-flex items-center gap-2 text-sm"><i class="fas fa-arrow-left"></i>Volver</button><h3 class="font-display text-lg font-bold mb-1">${p?'Editar':'Nuevo'} Producto</h3><p class="text-xs text-gray-500 mb-4">${s?.name}</p><div class="space-y-3"><div><label class="block text-xs text-gray-400 mb-1">Nombre *</label><input id="pf_name" type="text" value="${p?p.name:''}" class="admin-input"></div><div class="grid grid-cols-2 gap-3"><div><label class="block text-xs text-gray-400 mb-1">Precio CUP *</label><input id="pf_priceCUP" type="number" min="0" value="${p?p.priceCUP:0}" class="admin-input" oninput="document.getElementById('pf_usd').textContent=(Number(this.value)/${rate}).toFixed(2)"><p class="text-[10px] text-gray-500 mt-1">≈ <span id="pf_usd">${getUSD(p?p.priceCUP:0).toFixed(2)}</span> USD</p></div><div><label class="block text-xs text-gray-400 mb-1">Stock *</label><input id="pf_quantity" type="number" min="0" value="${p?p.quantity:10}" class="admin-input"></div></div><div><label class="block text-xs text-gray-400 mb-1"><i class="fas fa-image mr-1"></i>Imagen</label><input type="file" id="pf_file" accept="image/*" class="admin-input text-xs py-2"><img id="pf_preview" src="${p?p.image_url:''}" class="w-full h-32 object-contain rounded-xl mt-2 bg-gray-800 border border-gray-700 ${p?.image_url?'':'hidden'}"></div><button type="button" id="saveProdBtn" onclick="window.saveProduct()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar</button></div>`;setTimeout(()=>{const f=document.getElementById('pf_file');if(f)f.onchange=function(){const pr=document.getElementById('pf_preview');if(this.files[0]){pr.src=URL.createObjectURL(this.files[0]);pr.classList.remove('hidden')}}},50)};
+    window.saveProduct=async function(){const name=document.getElementById('pf_name').value.trim(),priceCUP=Number(document.getElementById('pf_priceCUP').value)||0,quantity=Number(document.getElementById('pf_quantity').value)||0;const file=document.getElementById('pf_file').files[0],btn=document.getElementById('saveProdBtn');if(!name){showToast('Nombre obligatorio','error');return}if(priceCUP<=0){showToast('Precio > 0','error');return}btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';try{let imgUrl=editingProductId?(findProduct(editingProductId)?.image_url||''):'';if(file){imgUrl=await uploadImage(file);if(!imgUrl){btn.disabled=false;btn.innerHTML='Guardar';return}}if(!imgUrl)imgUrl=`https://picsum.photos/seed/${Date.now()}/400/400`;const payload={name,"priceCUP":priceCUP,quantity,"image_url":imgUrl,"section_id":Number(editingProductSectionId)};if(editingProductId)await sb.from('products').update(payload).eq('id',editingProductId);else await sb.from('products').insert(payload);showToast('Guardado','success');await fetchStoreData();window.showAdminPage('products')}catch(e){showToast('Error: '+e.message,'error');btn.disabled=false;btn.innerHTML='Guardar'}};
+    window.deleteProduct=async function(pId){if(!confirm('¿Eliminar?'))return;try{await sb.from('products').delete().eq('id',pId);await sb.from('store_settings').update({"featuredProducts":storeData.featuredProducts.filter(id=>id!==Number(pId))}).eq('id',1);showToast('Eliminado','success');await fetchStoreData();renderProductList(document.getElementById('adminContent'))}catch(e){showToast('Error','error')}};
 
-    /* --- Aspecto --- */
-    function renderAppearance(el) {
-      el.innerHTML = `<div class="space-y-4"><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fas fa-font mr-2"></i>Textos</h3><div><label class="block text-xs text-gray-400 mb-1">Nombre de la tienda</label><input id="ap_name" type="text" value="${storeData.storeName || ''}" class="admin-input"></div><div><label class="block text-xs text-gray-400 mb-1">Subtítulo</label><input id="ap_sub" type="text" value="${storeData.heroSubtitle || ''}" class="admin-input"></div></div><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fas fa-palette mr-2"></i>Colores</h3><div class="grid grid-cols-3 gap-3"><div><label class="block text-xs text-gray-400 mb-1">Fondo</label><input id="ap_bg" type="color" value="${storeData.backgroundColor || '#FDFBF7'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div><div><label class="block text-xs text-gray-400 mb-1">Texto</label><input id="ap_fg" type="color" value="${storeData.headerColor || '#1A1A1A'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div><div><label class="block text-xs text-gray-400 mb-1">Acento</label><input id="ap_ac" type="color" value="${storeData.accentColor || '#D94F30'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div></div><div class="grid grid-cols-4 gap-2"><button type="button" onclick="document.getElementById('ap_bg').value='#FDFBF7';document.getElementById('ap_fg').value='#1A1A1A';document.getElementById('ap_ac').value='#D94F30';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FDFBF7 50%,#D94F30 50%);color:#1A1A1A;">Terracota</button><button type="button" onclick="document.getElementById('ap_bg').value='#FFFAFC';document.getElementById('ap_fg').value='#1A1A1A';document.getElementById('ap_ac').value='#E91E8C';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FFFAFC 50%,#E91E8C 50%);color:#1A1A1A;">Fucsia</button><button type="button" onclick="document.getElementById('ap_bg').value='#F0FFF4';document.getElementById('ap_fg').value='#1A3A2A';document.getElementById('ap_ac').value='#2E7D32';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#F0FFF4 50%,#2E7D32 50%);color:#1A3A2A;">Verde</button><button type="button" onclick="document.getElementById('ap_bg').value='#FFF8E1';document.getElementById('ap_fg').value='#33291A';document.getElementById('ap_ac').value='#F9A825';" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FFF8E1 50%,#F9A825 50%);color:#33291A;">Dorado</button></div></div><button type="button" onclick="window.saveAppearance()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar Aspecto</button></div>`;
-    }
-    window.saveAppearance = async function() {
-      try { await sb.from('store_settings').update({ "storeName": document.getElementById('ap_name').value.trim(), "heroSubtitle": document.getElementById('ap_sub').value.trim(), "backgroundColor": document.getElementById('ap_bg').value, "headerColor": document.getElementById('ap_fg').value, "accentColor": document.getElementById('ap_ac').value }).eq('id', 1); showToast('Aspecto actualizado', 'success'); await fetchStoreData(); } catch(e) { showToast('Error: ' + e.message, 'error'); }
-    };
+    function renderAppearance(el){el.innerHTML=`<div class="space-y-4"><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30"><i class="fas fa-font mr-2"></i>Textos</h3><div><label class="block text-xs text-gray-400 mb-1">Nombre</label><input id="ap_name" type="text" value="${storeData.storeName||''}" class="admin-input"></div><div><label class="block text-xs text-gray-400 mb-1">Subtítulo</label><input id="ap_sub" type="text" value="${storeData.heroSubtitle||''}" class="admin-input"></div></div><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30"><i class="fas fa-palette mr-2"></i>Colores</h3><div class="grid grid-cols-3 gap-3"><div><label class="block text-xs text-gray-400 mb-1">Fondo</label><input id="ap_bg" type="color" value="${storeData.backgroundColor||'#FDFBF7'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div><div><label class="block text-xs text-gray-400 mb-1">Texto</label><input id="ap_fg" type="color" value="${storeData.headerColor||'#1A1A1A'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div><div><label class="block text-xs text-gray-400 mb-1">Acento</label><input id="ap_ac" type="color" value="${storeData.accentColor||'#D94F30'}" class="w-full h-10 rounded cursor-pointer bg-transparent border border-gray-600"></div></div><div class="grid grid-cols-4 gap-2"><button type="button" onclick="document.getElementById('ap_bg').value='#FDFBF7';document.getElementById('ap_fg').value='#1A1A1A';document.getElementById('ap_ac').value='#D94F30'" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FDFBF7 50%,#D94F30 50%);color:#1A1A1A">Terracota</button><button type="button" onclick="document.getElementById('ap_bg').value='#FFFAFC';document.getElementById('ap_fg').value='#1A1A1A';document.getElementById('ap_ac').value='#E91E8C'" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FFFAFC 50%,#E91E8C 50%);color:#1A1A1A">Fucsia</button><button type="button" onclick="document.getElementById('ap_bg').value='#F0FFF4';document.getElementById('ap_fg').value='#1A3A2A';document.getElementById('ap_ac').value='#2E7D32'" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#F0FFF4 50%,#2E7D32 50%);color:#1A3A2A">Verde</button><button type="button" onclick="document.getElementById('ap_bg').value='#FFF8E1';document.getElementById('ap_fg').value='#33291A';document.getElementById('ap_ac').value='#F9A825'" class="py-2 rounded-lg text-[9px] font-bold border border-gray-600" style="background:linear-gradient(135deg,#FFF8E1 50%,#F9A825 50%);color:#33291A">Dorado</button></div></div><button type="button" onclick="window.saveAppearance()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar</button></div>`}
+    window.saveAppearance=async function(){try{await sb.from('store_settings').update({"storeName":document.getElementById('ap_name').value.trim(),"heroSubtitle":document.getElementById('ap_sub').value.trim(),"backgroundColor":document.getElementById('ap_bg').value,"headerColor":document.getElementById('ap_fg').value,"accentColor":document.getElementById('ap_ac').value}).eq('id',1);showToast('Guardado','success');await fetchStoreData()}catch(e){showToast('Error','error')}};
 
-    /* --- Config --- */
-    function renderSettings(el) {
-      const admins = storeData.adminEmails || [];
-      let aH = '';
-      admins.forEach((email, i) => {
-        aH += `<div class="flex items-center gap-3 bg-gray-800 p-3 rounded-lg border border-gray-700"><i class="fas fa-envelope text-gray-500"></i><span class="flex-1 text-sm truncate">${email}</span><button type="button" onclick="window.removeAdminEmail(${i})" class="text-red-400 text-xs hover:text-red-300 transition"><i class="fas fa-trash"></i></button></div>`;
-      });
-      el.innerHTML = `<div class="space-y-4"><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fas fa-shield-halved mr-2"></i>Emails administradores</h3><p class="text-gray-500 text-xs">Solo estos emails podrán acceder. Deben existir en Supabase Auth con su contraseña.</p><div class="space-y-2 max-h-48 overflow-y-auto admin-scroll">${aH || '<p class="text-xs text-gray-500 text-center py-4">Sin emails configurados</p>'}</div><div class="flex gap-2"><input id="st_newAdmin" type="email" placeholder="nuevo@ejemplo.com" class="admin-input flex-1 text-sm py-2"><button type="button" onclick="window.addAdminEmail()" class="px-4 py-2 rounded-lg bg-gray-700 text-xs font-bold hover:bg-gray-600 transition shrink-0"><i class="fas fa-plus mr-1"></i>Añadir</button></div><p class="text-[10px] text-yellow-500"><i class="fas fa-exclamation-triangle mr-1"></i>El email debe estar registrado en Supabase Auth (Authentication > Users).</p></div><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30;"><i class="fab fa-whatsapp mr-2"></i>Ventas</h3><div><label class="block text-xs text-gray-400 mb-1">WhatsApp (solo números, con país)</label><input id="st_wa" type="text" value="${storeData.whatsappNumber || ''}" class="admin-input" placeholder="5355555555"></div><div><label class="block text-xs text-gray-400 mb-1">1 USD =</label><div class="flex items-center gap-2"><input id="st_ex" type="number" value="${storeData.exchangeRate || 300}" class="admin-input"><span class="text-gray-400 font-bold text-sm">CUP</span></div></div></div><button type="button" onclick="window.saveSettings()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar Configuración</button></div>`;
-    }
-    window.addAdminEmail = async function() {
-      const email = document.getElementById('st_newAdmin').value.trim().toLowerCase();
-      if (!email || !email.includes('@')) { showToast('Escribe un email válido', 'error'); return; }
-      if (storeData.adminEmails.includes(email)) { showToast('Ese email ya está agregado', 'error'); return; }
-      storeData.adminEmails.push(email);
-      try { await sb.from('store_settings').update({ "adminEmails": storeData.adminEmails }).eq('id', 1); showToast('Email añadido', 'success'); await fetchStoreData(); renderSettings(document.getElementById('adminContent')); } catch(e) { showToast('Error', 'error'); }
-    };
-    window.removeAdminEmail = async function(i) {
-      if (storeData.adminEmails.length <= 1) { showToast('Debe haber al menos un email admin', 'error'); return; }
-      storeData.adminEmails.splice(i, 1);
-      try { await sb.from('store_settings').update({ "adminEmails": storeData.adminEmails }).eq('id', 1); showToast('Email eliminado', 'success'); await fetchStoreData(); renderSettings(document.getElementById('adminContent')); } catch(e) {}
-    };
-    window.saveSettings = async function() {
-      try { storeData.whatsappNumber = document.getElementById('st_wa').value.trim(); storeData.exchangeRate = Number(document.getElementById('st_ex').value) || 300; await sb.from('store_settings').update({ "whatsappNumber": storeData.whatsappNumber, "exchangeRate": storeData.exchangeRate }).eq('id', 1); showToast('Configuración guardada', 'success'); await fetchStoreData(); } catch(e) { showToast('Error: ' + e.message, 'error'); }
-    };
+    function renderSettings(el){const admins=storeData.adminEmails||[];let aH='';admins.forEach((email,i)=>{aH+=`<div class="flex items-center gap-3 bg-gray-800 p-3 rounded-lg border border-gray-700"><i class="fas fa-envelope text-gray-500"></i><span class="flex-1 text-sm truncate">${email}</span><button type="button" onclick="window.removeAdminEmail(${i})" class="text-red-400 text-xs hover:text-red-300"><i class="fas fa-trash"></i></button></div>`});el.innerHTML=`<div class="space-y-4"><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30"><i class="fas fa-shield-halved mr-2"></i>Emails admin</h3><p class="text-gray-500 text-xs">Deben existir en Supabase Auth con contraseña.</p><div class="space-y-2 max-h-48 overflow-y-auto admin-scroll">${aH||'<p class="text-xs text-gray-500 text-center py-4">Sin emails</p>'}</div><div class="flex gap-2"><input id="st_newAdmin" type="email" placeholder="nuevo@email.com" class="admin-input flex-1 text-sm py-2"><button type="button" onclick="window.addAdminEmail()" class="px-4 py-2 rounded-lg bg-gray-700 text-xs font-bold hover:bg-gray-600 shrink-0"><i class="fas fa-plus mr-1"></i>Añadir</button></div></div><div class="bg-adminCard rounded-xl p-4 border border-gray-700 space-y-4"><h3 class="font-display text-sm font-bold" style="color:#D94F30"><i class="fab fa-whatsapp mr-2"></i>Ventas</h3><div><label class="block text-xs text-gray-400 mb-1">WhatsApp</label><input id="st_wa" type="text" value="${storeData.whatsappNumber||''}" class="admin-input" placeholder="5355555555"></div><div><label class="block text-xs text-gray-400 mb-1">1 USD =</label><div class="flex items-center gap-2"><input id="st_ex" type="number" value="${storeData.exchangeRate||300}" class="admin-input"><span class="text-gray-400 font-bold text-sm">CUP</span></div></div></div><button type="button" onclick="window.saveSettings()" class="w-full py-3 rounded-xl font-bold text-white text-sm btn-accent">Guardar</button></div>`}
+    window.addAdminEmail=async function(){const email=document.getElementById('st_newAdmin').value.trim().toLowerCase();if(!email||!email.includes('@')){showToast('Email inválido','error');return}if(storeData.adminEmails.includes(email)){showToast('Ya existe','error');return}storeData.adminEmails.push(email);try{await sb.from('store_settings').update({"adminEmails":storeData.adminEmails}).eq('id',1);showToast('Añadido','success');await fetchStoreData();renderSettings(document.getElementById('adminContent'))}catch(e){showToast('Error','error')}};
+    window.removeAdminEmail=async function(i){if(storeData.adminEmails.length<=1){showToast('Mínimo 1 email','error');return}storeData.adminEmails.splice(i,1);try{await sb.from('store_settings').update({"adminEmails":storeData.adminEmails}).eq('id',1);showToast('Eliminado','success');await fetchStoreData();renderSettings(document.getElementById('adminContent'))}catch(e){}};
+    window.saveSettings=async function(){try{storeData.whatsappNumber=document.getElementById('st_wa').value.trim();storeData.exchangeRate=Number(document.getElementById('st_ex').value)||300;await sb.from('store_settings').update({"whatsappNumber":storeData.whatsappNumber,"exchangeRate":storeData.exchangeRate}).eq('id',1);showToast('Guardado','success');await fetchStoreData()}catch(e){showToast('Error','error')}};
 
-    /* ==================== INIT ==================== */
-    window.closeAllModals = closeAllModals;
-    window.switchScreen = switchScreen;
-    window.handleAdminClick = handleAdminClick;
+    window.closeAllModals=closeAllModals;window.switchScreen=switchScreen;window.handleAdminClick=handleAdminClick;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      checkAuth(); fetchStoreData();
+    /* FIX: Cargar datos PRIMERO, luego verificar auth */
+    document.addEventListener('DOMContentLoaded', async () => {
+      await fetchStoreData();
+      await checkAuth();
       document.getElementById('loginBtn').addEventListener('click', handleLogin);
       document.getElementById('adminLogout').addEventListener('click', handleLogout);
       document.getElementById('sendWhatsapp').addEventListener('click', sendWhatsappOrder);
-      document.querySelectorAll('.modal-overlay').forEach(o => { o.addEventListener('click', function(e) { if (e.target === o) closeAllModals(); }); });
-      window.addEventListener('keydown', e => { if (e.key === 'Escape') window.closeLightbox(); });
+      document.querySelectorAll('.modal-overlay').forEach(o => { o.addEventListener('click', function(e) { if (e.target === o) closeAllModals() }) });
+      window.addEventListener('keydown', e => { if (e.key === 'Escape') window.closeLightbox() });
     });
   </script>
 </body>
