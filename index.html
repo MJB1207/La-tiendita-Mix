@@ -620,7 +620,9 @@
     
     window.saveProduct = async function() {
       const name = document.getElementById('pf_name').value.trim();
-      const usdInput = parseFloat(document.getElementById('pf_priceUSD').value) || 0;
+      // Reemplazamos coma por punto por si el usuario escribió "10,5" en vez de "10.5"
+      const usdValue = document.getElementById('pf_priceUSD').value.replace(',', '.');
+      const usdInput = parseFloat(usdValue) || 0;
       const rate = Number(storeData.exchangeRate) || 300;
       const priceCUP = Math.round(usdInput * rate); 
       const quantity = Number(document.getElementById('pf_quantity').value) || 0;
@@ -634,11 +636,25 @@
         let imgUrl = editingProductId ? (findProduct(editingProductId)?.image_url || '') : ''; 
         if (file) { imgUrl = await uploadImage(file); if (!imgUrl) { btn.disabled = false; btn.innerHTML = 'Guardar Producto'; return; } } 
         if (!imgUrl) imgUrl = `https://picsum.photos/seed/${Date.now()}/400/400`; 
+        
         const payload = { name, "priceCUP": priceCUP, quantity, "image_url": imgUrl, "section_id": Number(editingProductSectionId) }; 
-        if (editingProductId) await sb.from('products').update(payload).eq('id', editingProductId); 
-        else await sb.from('products').insert(payload); 
+        
+        if (editingProductId) {
+          // Usamos .select() para verificar si Supabase realmente actualizó la fila
+          const { data, error } = await sb.from('products').update(payload).eq('id', Number(editingProductId)).select();
+          if (error) throw error;
+          // Si data está vacío, significa que Supabase bloqueó la actualización por permisos (RLS)
+          if (!data || data.length === 0) {
+            showToast('Error: Supabase bloqueó la actualización (revisa RLS)', 'error');
+            throw new Error("Actualización bloqueada");
+          }
+        } else { 
+          const { error } = await sb.from('products').insert(payload); 
+          if (error) throw error;
+        } 
         showToast('Producto guardado', 'success'); await fetchStoreData(); window.showAdminPage('products'); 
       } catch(e) { 
+        console.error("Error guardando:", e);
         showToast('Error: ' + e.message, 'error'); 
         btn.disabled = false; 
         btn.innerHTML = 'Guardar Producto'; 
@@ -698,4 +714,4 @@
     });
   </script>
 </body>
-                                                            </html>
+        </html>
