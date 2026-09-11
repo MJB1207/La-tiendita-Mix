@@ -167,7 +167,10 @@
             <input type="text" id="pName" placeholder="Nombre del producto" class="admin-input">
             <textarea id="pDesc" rows="2" placeholder="Descripción (opcional)" class="admin-input" style="resize:none"></textarea>
             <div class="grid grid-cols-2 gap-3">
-              <input type="number" id="pPrice" placeholder="Precio USD" min="0" step="0.01" class="admin-input">
+              <div>
+                <input type="number" id="pPrice" placeholder="Precio USD" min="0" step="0.01" class="admin-input" oninput="updatePricePreview()">
+                <p id="pPriceCUPPreview" class="text-xs text-gray-400 mt-1">Equivale a: 0 CUP</p>
+              </div>
               <input type="text" id="pCategory" placeholder="Categoría" class="admin-input">
             </div>
             <input type="url" id="pImage" placeholder="URL de la imagen" class="admin-input">
@@ -518,6 +521,14 @@ function renderAdmin(){
   document.getElementById('dolarRateInput').value = DOLAR_RATE;
   renderStarPicker();
   renderAdminList();
+  updatePricePreview();
+}
+
+// Esta función muestra en tiempo real el equivalente en CUP del precio USD que estás escribiendo
+function updatePricePreview(){
+  const usd = parseFloat(document.getElementById('pPrice').value) || 0;
+  const cup = priceCUP(usd);
+  document.getElementById('pPriceCUPPreview').textContent = `Equivale a: ${formatCUP(cup)} CUP`;
 }
 
 function renderAdminList(){
@@ -549,6 +560,7 @@ function updateDolarRate(){
   saveData();
   // re-renderizar todas las vistas para reflejar nuevos CUP
   renderAdminList();
+  updatePricePreview();
   if(currentScreen==='catalog') renderCatalog();
   if(currentScreen==='cart') renderCart();
   showToast(`Tasa actualizada: 1 USD = ${val} CUP`,'success');
@@ -592,6 +604,7 @@ function editProduct(id){
   document.getElementById('pImage').value = p.image||'';
   isFeatured = !!p.featured;
   renderStarPicker();
+  updatePricePreview();
   document.getElementById('formTitle').textContent = 'Editar Producto';
   document.getElementById('pName').focus();
 }
@@ -611,6 +624,7 @@ function resetForm(){
   ['pName','pDesc','pPrice','pCategory','pImage'].forEach(id=>document.getElementById(id).value='');
   isFeatured = false;
   renderStarPicker();
+  updatePricePreview();
   document.getElementById('formTitle').textContent = 'Nuevo Producto';
 }
 
@@ -633,6 +647,7 @@ function resetForm(){
   window.adminLogin = adminLogin;
   window.adminLogout = adminLogout;
   window.updateDolarRate = updateDolarRate;
+  window.updatePricePreview = updatePricePreview;
   window.saveProduct = saveProduct;
   window.editProduct = editProduct;
   window.deleteProduct = deleteProduct;
@@ -641,4 +656,4 @@ function resetForm(){
 })();
 </script>
 </body>
-    </html>
+                </html>
